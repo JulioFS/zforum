@@ -1,0 +1,9 @@
+.*
+*.pyc
+*.key
+*.crt
+*.pem
+__pycache__/*
+databases/*
+!/.gitignore
+settings_private.py

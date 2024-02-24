@@ -1,0 +1,12 @@
+""" Private Parameters
+"""
+
+# You must define these parameters in your normal settings_private.py file
+# with valid (sensitive) information.
+OAUTH2GOOGLE_CLIENT_ID = ''
+OAUTH2GOOGLE_CLIENT_SECRET = ''
+SMTP_SENDER = ''
+SMTP_LOGIN = ''
+SESSION_SECRET_KEY = ''
+SESSION_TYPE = ''
+DB_URI = 'sqlite://storage.db'
