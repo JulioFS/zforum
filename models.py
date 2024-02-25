@@ -59,7 +59,7 @@ db.commit()
 db.define_table(
     'message_categories',
     Field('name', type='string', required=True, length=128),
-    Field('display_order', type='number')
+    Field('display_order', type='integer')
 )
 db.commit()
 
@@ -109,7 +109,7 @@ db.commit()
 
 db.define_table(
     'rank',
-    Field('Name', type='string', length=128, required=True),
+    Field('name', type='string', length=128, required=True),
     Field('min_value', type='integer', notnull=True)
 )
 db.commit()
@@ -186,94 +186,108 @@ if db(db.message_categories).isempty():
 if db(db.system_setting).isempty():
     system_settings = [
         {
-            'property_name' : 'zfss_topic_teaser_length',
-            'property_desc' : ('Topic Teaser Length: The number of characters '
-                               'shown for a topic when it is viewed from the '
-                               'topic listing page')
+            'name' : 'zfss_topic_teaser_length',
+            'description' : ('Topic Teaser Length: The number of characters '
+                            'shown for a topic when it is viewed from the '
+                               'topic listing page'),
+            'value' : '300'
         },
         {
-            'property_name' : 'zfss_allow_member_avatars',
-            'property_desc' : ('Allow Avatars: If empty, users will not be '
+            'name' : 'zfss_allow_member_avatars',
+            'description' : ('Allow Avatars: If empty, users will not be '
                                'given the choice of adding or change their '
                                'avatars, any other value will enable avatars '
-                               'for all registered users in the system')
+                               'for all registered users in the system'),
+            'value' : 'True'
         },
         {
-            'property_name' : 'zfss_system_language',
-            'property_desc' : ('System Language: This value will be used when '
+            'name' : 'zfss_system_language',
+            'description' : ('System Language: This value will be used when '
                               'a user accesses the system (Anonymous User), '
                               'once the user is signed in, they will have '
                               'the opportunity of changing the language '
                               'settings for their sessions. The language '
                               'code must match any of the languages defined '
-                              'in the Available Languages section.')
+                              'in the Available Languages section.'),
+            'value' : 'en_US'
         },
         {
-            'property_name' : 'zfss_admin_contact_email',
-            'property_desc' : ('Admin Contact: (Important) - The forum '
+            'name' : 'zfss_admin_contact_email',
+            'description' : ('Admin Contact: (Important) - The forum '
                                'system uses this value to specify the *From* '
                                'email header for any email that is sent out, '
                                'please use a valid email address that your '
                                'domain will recognize, otherwise your '
-                               'system may not send emails at all.')
+                               'system may not send emails at all.'),
+            'value' : 'admin@techfuel.net'
         },
         {
-            'property_name' : 'zfss_use_ranking_system',
-            'property_desc' : ('Use Ranking System: If empty, the forum '
+            'name' : 'zfss_use_ranking_system',
+            'description' : ('Use Ranking System: If empty, the forum '
                                'will use default values of Member, Channel '
                                'Administrator or System Administrator, any '
                                'other value will enable forum rankings based '
                                'on the number of postings the users have '
-                               '(see table member_rank for rank information.)')
+                               '(see table member_rank for rank information.)'),
+            'value' : 'True'
         },
         {
-            'property_name' : 'zfss_hot_topic_threshold',
-            'property_desc' : ('Hot Topic Threshold: Number of views '
-                               'necessary to mark the topic as *hot*.')
+            'name' : 'zfss_hot_topic_threshold',
+            'description' : ('Hot Topic Threshold: Number of views '
+                               'necessary to mark the topic as *hot*.'),
+            'value' : '300'
         },
         {
-            'property_name' : 'zfss_member_quota',
-            'property_desc' : ('Message Quota: Leave empty to disable '
+            'name' : 'zfss_member_quota',
+            'description' : ('Message Quota: Leave empty to disable '
                                'quotas for messages for your users, any other '
                                'numeric value will represent the number '
                                'of <b>bytes</b> of allowance, an invalid '
-                               'amount will always default to 50Kb per user.')
+                               'amount will always default to 50Kb per user.'),
+            'value' : '50000'
         },
         {
-            'property_name' : 'zfss_system_announcement_max',
-            'property_desc' : ('System Announcements View: This controls the '
+            'name' : 'zfss_system_announcement_max',
+            'description' : ('System Announcements View: This controls the '
                                '(maximum) number of system announcements that '
                                'zForum will display in its right nav, an '
                                'invalid value or zero will show a =-No '
-                               'System Messages-= title.')
+                               'System Messages-= title.'),
+            'value' : '10'
         },
         {
-            'property_name' : 'zfss_latest_postings_max',
-            'property_desc' : ('Latest Postings View: This controls the '
+            'name' : 'zfss_latest_postings_max',
+            'description' : ('Latest Postings View: This controls the '
                                '(maximum) number of latest postings that '
                                'zForum will display in its right nav, '
                                'an invalid value or zero will show '
-                               'a =-No Messages-= title.')
+                               'a =-No Messages-= title.'),
+            'value' : '10'
         },
         {
-            'property_name' : 'zfss_responses_per_page',
-            'property_desc' : ('Responses per page: Controls the amount of '
+            'name' : 'zfss_responses_per_page',
+            'description' : ('Responses per page: Controls the amount of '
                                'responses (children topics) that zForum '
                                'will show and will add pagination/lazy '
-                               'loading accordingly.')
+                               'loading accordingly.'),
+            'value' : '15'
         },
         {
-            'property_name' : 'zfss_header_html',
-            'property_desc' : ('Header Text: This can contain html/markdown '
+            'name' : 'zfss_header_html',
+            'description' : ('Header Text: This can contain html/markdown '
                                'code and will be shown at the top-bar of '
-                               'zForum.')
+                               'zForum.'),
+            'value' : ('### Welcome to zForum - A lightweight, no-ads forum '
+                       'system')
         },
         {
-            'property_name' : 'zfsp_available_languages',
-            'property_desc' : ('Available languages to the user, use '
+            'name' : 'zfsp_available_languages',
+            'description' : ('Available languages to the user, use '
                                'the form: Language:languagecode_COUNTRYCODE, '
                                '(e.g. US English:en_US). Separate each '
-                               'set by the PIPE Symbol (|).')
+                               'set by the PIPE Symbol (|).'),
+            'value' : ('English (U.S.A):en_US|Spanish (México):es_MX|'
+                       'Dutch (Nederlands):nl_NL|French (France):fr_FR')
         }
     ]
 
@@ -282,48 +296,48 @@ if db(db.system_setting).isempty():
 if db(db.rank).isempty():
     ranks = [
         {
-            'rank_name' : 'Starfleet Ensign',
-            'rank_value_min' : 0
+            'name' : 'Starfleet Ensign',
+            'min_value' : 0
         },
         {
-            'rank_name' : 'Starfleet Lieutenant, Junior Grade',
-            'rank_value_min' : 6
+            'name' : 'Starfleet Lieutenant, Junior Grade',
+            'min_value' : 6
         },
         {
-            'rank_name' : 'Starfleet Lieutenant',
-            'rank_value_min' : 15
+            'name' : 'Starfleet Lieutenant',
+            'min_value' : 15
         },
         {
-            'rank_name' : 'Starfleet Lieutenant Commander',
-            'rank_value_min' : 40
+            'name' : 'Starfleet Lieutenant Commander',
+            'min_value' : 40
         },
         {
-            'rank_name' : 'Starfleet Commander',
-            'rank_value_min' : 85
+            'name' : 'Starfleet Commander',
+            'min_value' : 85
         },
         {
-            'rank_name' : 'Starfleet Captain',
-            'rank_value_min' : 110
+            'name' : 'Starfleet Captain',
+            'min_value' : 110
         },
         {
-            'rank_name' : 'Starfleet Commodore',
-            'rank_value_min' : 160
+            'name' : 'Starfleet Commodore',
+            'min_value' : 160
         },
         {
-            'rank_name' : 'Starfleet Rear Admiral',
-            'rank_value_min' : 200
+            'name' : 'Starfleet Rear Admiral',
+            'min_value' : 200
         },
         {
-            'rank_name' : 'Starfleet Vice Admiral',
-            'rank_value_min' : 250
+            'name' : 'Starfleet Vice Admiral',
+            'min_value' : 250
         },
         {
-            'rank_name' : 'Starfleet Admiral',
-            'rank_value_min' : 500
+            'name' : 'Starfleet Admiral',
+            'min_value' : 500
         },
         {
-            'rank_name' : 'Starfleet Fleet Admiral',
-            'rank_value_min' : 1000
+            'name' : 'Starfleet Fleet Admiral',
+            'min_value' : 1000
         }
     ]
     db.rank.bulk_insert(ranks)
