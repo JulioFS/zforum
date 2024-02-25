@@ -9,10 +9,6 @@ from .models import db
 # by importing controllers you expose the actions defined in it
 from . import controllers
 
-#import os
-#import sys
-#sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-
 # optional parameters
 __version__ = "0.0.0"
 __author__ = "you <you@example.com>"
