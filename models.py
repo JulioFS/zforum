@@ -292,6 +292,7 @@ if db(db.system_setting).isempty():
     ]
 
     db.system_setting.bulk_insert(system_settings)
+    db.commit()
 
 if db(db.rank).isempty():
     ranks = [
@@ -341,3 +342,4 @@ if db(db.rank).isempty():
         }
     ]
     db.rank.bulk_insert(ranks)
+    db.commit()

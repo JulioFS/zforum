@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 
 <head>
   <base href="[[=URL('static')]]/">
@@ -7,13 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>zForum, a simple, no-ads Message Board System by rustix.DEV</title>
   <link href="[[=URL('static', 'bootstrap-5.3.3-dist/css/bootstrap.min.css')]]" rel="stylesheet">
-  <link href="[[=URL('static', 'bootstrap-icons-1.11.3/font/bootstrap-icons.min.css')]]"
+  <link href="[[=URL('static', 'bootstrap-icons-1.11.3/font/bootstrap-icons.min.css')]]" rel="stylesheet">
+  <link href="[[=URL('static', 'css/zforum.css')]]" rel="stylesheet">
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg bg-success fixed-top" data-bs-theme="dark">
+  <nav class="navbar navbar-expand-lg bg-success fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand" href="[[=URL('index')]]">TECHFUEL<span class="fs-6">.net</span></a>
+      <a class="navbar-brand" href="[[=URL('index')]]">zForum<span class="fs-6">.org</span></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -26,16 +27,16 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="[[=URL('code')]]"><i class="bi bi-code"></i> Coding</a>
+            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-tv"></i> Channels</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="[[=URL('me')]]"><i class="bi bi-file-earmark-person-fill"></i> About</a>
+            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-trophy"></i> Sponsors</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="[[=URL('about')]]"><i class="bi bi-person-lines-fill"></i> Contact</a>
+            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-clipboard-check"></i> Rules</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="[[=URL('rustix')]]"><i class="bi bi-share-fill"></i> Rustix.dev <span class="badge bg-primary">New</span></a>
+            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-file-earmark-person"></i> About</a>
           </li>
         </ul>
 
@@ -59,7 +60,7 @@
   [[include]]
 
   <script src="[[=URL('static', 'bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js')]]"></script>
-  <script src="[[=URL('static', 'luxon.js')]]"></script>
+  <script src="[[=URL('static', 'js/luxon.min.js')]]"></script>
   [[block page_scripts]]<!-- individual pages can add scripts here -->[[end]]
 </body>
 
