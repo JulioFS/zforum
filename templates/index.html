@@ -1,18 +1,22 @@
 [[extend 'zforum_layout.html']]
-
 <div class="container mt-1 mb-2">
-  <div class="row align-items-start">
-    <div class="col-sm-8 p-3 border bg-body-secondary">
+  <div class="row">
+    <div class="col-sm-8 p-3 border border-secondary border-end-0 border-top-0 bg-light-subtle">
       [[=message]]
     </div>
-    <div class="col-sm-4 p-3 border bg-light-subtle">
-      Hello
-      <p>Sidenav goes here</p>
-      <p>Sidenav goes here</p>
-      <p>Sidenav goes here</p>
-      <p>Sidenav goes here</p>
-      <p>Sidenav goes here</p>
-      <p>Sidenav goes here</p>
+    <div class="feature col-sm-4 p-3 bg-dark border border-secondary border-top-0">
+      <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
+        <i class="bi bi-tv"></i>
+      </div>
+      <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+      <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and
+        probably just keep going until we run out of words.</p>
+      <a href="#" class="icon-link">
+        Call to action
+        <svg class="bi">
+          <use xlink:href="#chevron-right"></use>
+        </svg>
+      </a>
     </div>
   </div>
 </div>

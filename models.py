@@ -11,6 +11,7 @@ now = datetime.datetime.utcnow
 db.define_table(
     'channel',
     Field('tag', type='string', length=64), # Must Index
+    Field('banner', type='string', length=128),
     Field('title', type='string', required=True, length=128),
     Field('content', type='text'),
     Field('created_by', 'reference auth_user'),
