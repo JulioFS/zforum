@@ -17,8 +17,8 @@ APP_NAME = os.path.split(APP_FOLDER)[-1]
 DB_FOLDER = required_folder(APP_FOLDER, 'databases')
 DB_URI = 'override-in-settings-private'
 DB_POOL_SIZE = 1
-DB_MIGRATE = False
-DB_FAKE_MIGRATE = True  # maybe?
+DB_MIGRATE = False # True if DB does not exist else False
+DB_FAKE_MIGRATE = True  # False id DB does not exist else True
 
 # location where static files are stored:
 STATIC_FOLDER = required_folder(APP_FOLDER, "static")
