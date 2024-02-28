@@ -29,14 +29,22 @@ else your app will result in undefined behavior
 from py4web import action, request, abort, redirect, URL
 from yatl.helpers import A
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
+from .forumhelper import forumhelper as fh
 
 
-@action("index")
-@action.uses("index.html", auth, T)
+@action('index')
+@action.uses('index.html', auth, T)
 def index():
     """ /index entry point """
     user = auth.get_user()
-    message = T("Hello {first_name}").format(**user) if user else T("Hello")
-    actions = {"allowed_actions": auth.param.allowed_actions}
-    payload = {'message': message, 'actions': actions}
+    channel_desc = fh.get_system_property('zfss_header_html', '')
+    payload = {'channel_desc': channel_desc}
     return payload
+
+@action('zauth/login')
+@action.uses('login.html')
+def auth_login():
+    """ Custom Login Page """
+    form = request.forms
+    req_method = request.method
+    return {}
