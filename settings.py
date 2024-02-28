@@ -23,9 +23,6 @@ DB_FAKE_MIGRATE = True  # False id DB does not exist else True
 # location where static files are stored:
 STATIC_FOLDER = required_folder(APP_FOLDER, "static")
 
-# location where to store uploaded files:
-UPLOAD_FOLDER = required_folder(APP_FOLDER, "uploads")
-
 # send verification email on registration
 VERIFY_EMAIL = True
 
@@ -87,23 +84,8 @@ OAUTH2FACEBOOK_CLIENT_SECRET = None
 OAUTH2GITHUB_CLIENT_ID = None
 OAUTH2GITHUB_CLIENT_SECRET = None
 
-# enable PAM
-USE_PAM = False
-
-# enable LDAP
-USE_LDAP = False
-LDAP_SETTINGS = {
-    "mode": "ad",  # Microsoft Active Directory
-    "server": "mydc.domain.com", # FQDN or IP of one Domain Controller
-    "base_dn": "cn=Users,dc=domain,dc=com", # base dn, i.e. where the users are located
-}
-
 # i18n settings
 T_FOLDER = required_folder(APP_FOLDER, "translations")
-
-# Celery settings
-USE_CELERY = False
-CELERY_BROKER = "redis://localhost:6379/0"
 
 # try import private settings
 try:

@@ -1,15 +1,14 @@
 """
 This file defines cache, session, and translator T object for the app
-These are fixtures that every app needs so probably you will not be editing this file
+These are fixtures that every app needs so probably you will not
+be editing this file
 """
-import os
 import sys
 import logging
-from py4web import Session, Cache, Translator, Flash, DAL, Field, action
+from pydal.tools.tags import Tags
+from py4web import Session, Cache, Translator, DAL, Field
 from py4web.utils.mailer import Mailer
 from py4web.utils.auth import Auth
-from py4web.utils.downloader import downloader
-from pydal.tools.tags import Tags
 from py4web.utils.factories import ActionFactory
 from . import settings
 
@@ -52,23 +51,6 @@ T = Translator(settings.T_FOLDER)
 # #######################################################
 if settings.SESSION_TYPE == "cookies":
     session = Session(secret=settings.SESSION_SECRET_KEY)
-elif settings.SESSION_TYPE == "redis":
-    import redis
-
-    host, port = settings.REDIS_SERVER.split(":")
-    # for more options: https://github.com/andymccurdy/redis-py/blob/master/redis/client.py
-    conn = redis.Redis(host=host, port=int(port))
-    conn.set = (
-        lambda k, v, e, cs=conn.set, ct=conn.ttl: cs(k, v, ct(k))
-        if ct(k) >= 0
-        else cs(k, v, e)
-    )
-    session = Session(secret=settings.SESSION_SECRET_KEY, storage=conn)
-elif settings.SESSION_TYPE == "memcache":
-    import memcache, time
-
-    conn = memcache.Client(settings.MEMCACHE_CLIENTS, debug=0)
-    session = Session(secret=settings.SESSION_SECRET_KEY, storage=conn)
 elif settings.SESSION_TYPE == "database":
     from py4web.utils.dbstore import DBStore
 
@@ -113,16 +95,6 @@ if auth.db:
 # #######################################################
 # Enable optional auth plugin
 # #######################################################
-if settings.USE_PAM:
-    from py4web.utils.auth_plugins.pam_plugin import PamPlugin
-
-    auth.register_plugin(PamPlugin())
-
-if settings.USE_LDAP:
-    from py4web.utils.auth_plugins.ldap_plugin import LDAPPlugin
-
-    auth.register_plugin(LDAPPlugin(db=db, groups=groups, **settings.LDAP_SETTINGS))
-
 if settings.OAUTH2GOOGLE_CLIENT_ID:
     from py4web.utils.auth_plugins.oauth2google import OAuth2Google  # TESTED
 
@@ -135,7 +107,8 @@ if settings.OAUTH2GOOGLE_CLIENT_ID:
     )
 
 if settings.OAUTH2GOOGLE_SCOPED_CREDENTIALS_FILE:
-    from py4web.utils.auth_plugins.oauth2google_scoped import OAuth2GoogleScoped # TESTED
+    from py4web.utils.auth_plugins.oauth2google_scoped \
+        import OAuth2GoogleScoped # TESTED
 
     auth.register_plugin(
         OAuth2GoogleScoped(
@@ -156,8 +129,8 @@ if settings.OAUTH2GITHUB_CLIENT_ID:
         )
     )
 
-if settings.OAUTH2FACEBOOK_CLIENT_ID:
-    from py4web.utils.auth_plugins.oauth2facebook import OAuth2Facebook  # UNTESTED
+if settings.OAUTH2FACEBOOK_CLIENT_ID:  # Untested
+    from py4web.utils.auth_plugins.oauth2facebook import OAuth2Facebook
 
     auth.register_plugin(
         OAuth2Facebook(
@@ -167,49 +140,10 @@ if settings.OAUTH2FACEBOOK_CLIENT_ID:
         )
     )
 
-if settings.OAUTH2OKTA_CLIENT_ID:
-    from py4web.utils.auth_plugins.oauth2okta import OAuth2Okta  # TESTED
-
-    auth.register_plugin(
-        OAuth2Okta(
-            client_id=settings.OAUTH2OKTA_CLIENT_ID,
-            client_secret=settings.OAUTH2OKTA_CLIENT_SECRET,
-            callback_url="auth/plugin/oauth2okta/callback",
-        )
-    )
-
-# #######################################################
-# Define a convenience action to allow users to download
-# files uploaded and reference by Field(type='upload')
-# #######################################################
-if settings.UPLOAD_FOLDER:
-    @action('download/<filename>')
-    @action.uses(db)
-    def download(filename):
-        return downloader(db, settings.UPLOAD_FOLDER, filename)
-    # To take advantage of this in Form(s)
-    # for every field of type upload you MUST specify:
-    #
-    # field.upload_path = settings.UPLOAD_FOLDER
-    # field.download_url = lambda filename: URL('download/%s' % filename)
-
-# #######################################################
-# Optionally configure celery
-# #######################################################
-if settings.USE_CELERY:
-    from celery import Celery
-
-    # to use "from .common import scheduler" and then use it according
-    # to celery docs, examples in tasks.py
-    scheduler = Celery(
-        "apps.%s.tasks" % settings.APP_NAME, broker=settings.CELERY_BROKER
-    )
-
-
 # #######################################################
 # Enable authentication
 # #######################################################
-auth.enable(uses=(session, T, db), env=dict(T=T))
+auth.enable(uses=(session, T, db), env={'T': T})
 
 # #######################################################
 # Define convenience decorators

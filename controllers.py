@@ -14,15 +14,16 @@ If path == 'index' it can be omitted:
 
 The path follows the bottlepy syntax.
 
-@action.uses('generic.html')  indicates that the action uses the generic.html template
+@action.uses('generic.html')  indicates that the action uses generic.html
 @action.uses(session)         indicates that the action uses the session
 @action.uses(db)              indicates that the action uses the db
-@action.uses(T)               indicates that the action uses the i18n & pluralization
-@action.uses(auth.user)       indicates that the action requires a logged in user
-@action.uses(auth)            indicates that the action requires the auth object
+@action.uses(T)               indicates that the action uses the i18n
+@action.uses(auth.user)       indicates that the action requires logged in user
+@action.uses(auth)            indicates that the action requires auth object
 
 session, db, T, auth, and tempates are examples of Fixtures.
-Warning: Fixtures MUST be declared with @action.uses({fixtures}) else your app will result in undefined behavior
+Warning: Fixtures MUST be declared with @action.uses({fixtures})
+else your app will result in undefined behavior
 """
 
 from py4web import action, request, abort, redirect, URL
@@ -33,6 +34,7 @@ from .common import db, session, T, cache, auth, logger, authenticated, unauthen
 @action("index")
 @action.uses("index.html", auth, T)
 def index():
+    """ /index entry point """
     user = auth.get_user()
     message = T("Hello {first_name}").format(**user) if user else T("Hello")
     actions = {"allowed_actions": auth.param.allowed_actions}
