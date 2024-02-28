@@ -42,9 +42,13 @@ def index():
     return payload
 
 @action('zauth/login')
-@action.uses('login.html')
+@action.uses('login.html', auth)
 def auth_login():
     """ Custom Login Page """
     form = request.forms
     req_method = request.method
-    return {}
+    if req_method == 'POST':
+        email = form.get('email')
+        passwd = form.get('passwd')
+    result = auth.login(email, passwd)
+    return {'result': result}

@@ -10,12 +10,15 @@
   <div class="row">
     <div class="col-sm-8 p-3 border border-secondary border-end-0 border-top-0 bg-light-subtle">
       <p>Vergonio</p>
+      <p>[[=globals()]]</p>
     </div>
+
+    <!-- Right Nav - Move to own block [?] -->
     <div class="feature col-sm-4 p-3 bg-dark border border-secondary border-top-0">
       <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
         <i class="bi bi-tv"></i>
       </div>
-      <h3 class="fs-2 text-body-emphasis">Featured title</h3>
+      <h3 class="fs-2 text-body-emphasis">Welcome Human</h3>
       <p>Paragraph of text beneath the heading to explain the heading. We'll add onto it with another sentence and
         probably just keep going until we run out of words.</p>
       <a href="#" class="icon-link">
@@ -24,6 +27,17 @@
           <use xlink:href="#chevron-right"></use>
         </svg>
       </a>
+
+      <div class="d-grid gap-2 mt-4">
+        [[if globals().get('user'):]]
+          <a class="btn btn-primary" href="#" role="button">Profile</a>
+          <a class="btn btn-primary" href="#" role="button">Log Out</a>
+        [[else:]]
+          <a class="btn btn-primary" href="[[=URL('zauth/login')]]" role="button">Log In</a>
+          <a class="btn btn-primary" href="#" role="button">Sign Up</a>
+        [[pass]]
+      </div>
+
     </div>
   </div>
 </div>
