@@ -26,7 +26,7 @@ Warning: Fixtures MUST be declared with @action.uses({fixtures})
 else your app will result in undefined behavior
 """
 
-from py4web import action, request, abort, redirect, URL
+from py4web import action, request, response, abort, redirect, URL
 from yatl.helpers import A
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
 from .forumhelper import forumhelper as fh
@@ -41,14 +41,27 @@ def index():
     payload = {'channel_desc': channel_desc}
     return payload
 
-@action('zauth/login')
+@action('zauth/login', method=['get', 'post'])
 @action.uses('login.html', auth)
 def auth_login():
     """ Custom Login Page """
-    form = request.forms
-    req_method = request.method
-    if req_method == 'POST':
-        email = form.get('email')
-        passwd = form.get('passwd')
-    result = auth.login(email, passwd)
-    return {'result': result}
+    req = request
+    error = None
+    is_cancel = False
+    if req.method == 'POST':
+        form = req.forms
+        email = form.get('email', '')
+        passwd = form.get('passwd', '')
+        is_cancel = 'cancel' in form.keys()
+        # Only call the internal auth methods when it is necessary
+        if (len(email) == 0 or len(passwd) == 0):
+            error = 'Both email and password must be supplied.'
+        else:
+            user, error = auth.login(email, passwd)
+
+    # redirect to home if auth was successful, otherwise setup the
+    # error message and return back to the login screen
+    if (req.method == 'GET' or error is not None) and not is_cancel:
+        return {'error': error}
+    # Assume Success..
+    redirect(URL('index'))
