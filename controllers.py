@@ -65,3 +65,10 @@ def auth_login():
         return {'error': error}
     # Assume Success..
     redirect(URL('index'))
+
+@action('zauth/request_reset_password', method=['get', 'post'])
+@action.uses('reset.html', auth)
+def auth_request_reset_password():
+    """ Custom Request Password Reset """
+    error = None
+    return {'error': error}

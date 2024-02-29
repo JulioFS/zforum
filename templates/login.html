@@ -1,57 +1,60 @@
 [[extend "zforum_layout.html"]]
 <!-- /zauth/login (Login Method overriding OOB auth) //-->
-<style>
-  .auth-container {
-    max-width: 33%;
-    min-width: 200px;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid #e1e1e1;
-    border-radius: 10px;
-    padding: 20px;
-  }
-</style>
 
 [[if error:]]
 <div class="container pt-3">
   <div class="alert alert-warning" role="alert">
     [[=error]]
-    [[if str(error).lower().find('invalid credentials') >= 0:]]
-    - Perhaps you wish to
-    <a href="[[=URL('zauth/signup')]]"
-    class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-    title="Create a New Account">create a new account</a> instead?
-    [[pass]]
+    <div class="pt-2">
+      <a href="[[=URL('zauth/register')]]"
+        class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+        title="Create a New Account">Sign Up</a> instead?
+    </div>
   </div>
 </div>
 [[pass]]
 
 <form method="post" enctype="multipart/form-data" action="[[=URL('zauth/login')]]">
-  <div class="container-fluid my-4">
-    <div class="auth-container">
+  <div class="container my-4">
 
-      <div class="mb-3">
-        <label for="login-input" class="form-label">Email address</label>
-        <input type="email" class="form-control" id="login-input" name="email" placeholder="name@example.com">
-      </div>
-      <div class="mb-3">
-        <label for="login-passwd" class="form-label">Password</label>
-        <input type="password" id="login-passwd" name="passwd" class="form-control" aria-describedby="passwordHelpBlock">
-        <div id="passwordHelpBlock" class="form-text">
-          Please ensure your password or passphrase contains letters and numbers,
-          also include special characters if you want it to be more secure.
+    <div class="d-flex justify-content-center">
+      <div class="card">
+        <h5 class="card-header">
+          Log In
+        </h5>
+        <div class="card-body">
+          <p class="card-text">
+            <div class="mb-3">
+              <label for="login-input" class="form-label">Email Address:</label>
+              <input type="email" class="form-control" id="login-input" name="email" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+              <label for="login-passwd" class="form-label">Password:</label>
+              <input type="password" id="login-passwd" name="passwd" class="form-control"
+                aria-describedby="passwordHelpBlock">
+              <div id="passwordHelpBlock" class="form-text">
+                Please ensure your password or passphrase contains letters and numbers,
+                also include special characters if you want it to be more secure.
+              </div>
+            </div>
+
+            <p>Additional Login Providers:
+              <a href="[[=URL('auth/plugin/oauth2google/login')]]" title="Google Login ">Log In with Google</a>
+            </p>
+
+            <div class="mb-0 d-grid gap-2 d-md-flex justify-content-md-end">
+              <button class="btn btn-primary" type="submit" name="submit">Log In</button>
+              <button class="btn btn-primary" type="submit" name="cancel">Cancel</button>
+            </div>
+            <div class="mb-1"><a href="[[=URL('zauth/request_reset_password')]]" title="Password Recovery">Forgot
+                Password?</a></div>
+          </p>
         </div>
       </div>
-
-      <p>Additional Login Providers:
-        <a href="[[=URL('auth/plugin/oauth2google/login')]]" title="Google Login ">Log In with Google</a>
-      </p>
-
-      <div class="mb-3 d-grid gap-2 d-md-flex justify-content-md-end">
-        <button class="btn btn-primary" type="submit" name="submit">Log In</button>
-        <button class="btn btn-primary" type="submit" name="cancel">Cancel</button>
-      </div>
-
     </div>
   </div>
 </form>
+
+<script>
+  document.getElementById('login-input').focus().select();
+</script>

@@ -1,0 +1,45 @@
+[[extend "zforum_layout.html"]]
+<!-- /zauth/request_reset_password (Password Request Method overriding OOB auth) //-->
+
+[[if error:]]
+<div class="container pt-3">
+  <div class="alert alert-warning" role="alert">
+    [[=error]]
+    <div class="pt-2">
+      <a href="[[=URL('zauth/register')]]"
+        class="link-success link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+        title="Create a New Account">Sign Up</a> instead?
+    </div>
+  </div>
+</div>
+[[pass]]
+
+<form method="post" enctype="multipart/form-data" action="[[=URL('zauth/request_reset_password')]]">
+  <div class="container my-4">
+
+    <div class="d-flex justify-content-center">
+      <div class="card">
+        <h5 class="card-header">
+          Password Reset Request
+        </h5>
+        <div class="card-body">
+          <div class="card-text">
+            <div class="mb-3">
+              <label for="username-email" class="form-label">Username or Email Address:</label>
+              <input type="text" class="form-control" id="username-email" name="username-email">
+            </div>
+
+            <div class="mt-4 mb-0 d-grid gap-2 d-md-flex justify-content-md-end">
+              <button class="btn btn-primary" type="submit" name="submit">Request</button>
+              <button class="btn btn-primary" type="submit" name="cancel">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+  document.getElementById('username-email').focus().select();
+</script>
