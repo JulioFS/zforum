@@ -64,11 +64,33 @@ def auth_login():
     if (req.method == 'GET' or error is not None) and not is_cancel:
         return {'error': error}
     # Assume Success..
-    redirect(URL('index'))
+    return redirect(URL('index'))
 
 @action('zauth/request_reset_password', method=['get', 'post'])
 @action.uses('reset.html', auth)
 def auth_request_reset_password():
     """ Custom Request Password Reset """
+    req = request
     error = None
+    is_cancel = False
+    if req.method == 'POST':
+        form = req.forms
+        user_email = form.get('username-email', '')
+        is_cancel = 'cancel' in form.keys()
+        # Only call the internal auth methods when it is necessary
+        if len(user_email) == 0:
+            error = 'A username or email must be supplied.'
+        else:
+            # if token is None, the user was not found, but save from
+            # notifying the user of this to prevent username leaking
+            token = auth.request_reset_password(user_email)
+    if (req.method == 'GET' or error is not None) and not is_cancel:
+        return {'error': error}
+    return redirect(URL('index'))
+
+@action('zauth/register', method=['get', 'post'])
+@action.uses('register.html')
+def auth_regisrer():
+    """ Register override """
+    error = ''
     return {'error': error}
