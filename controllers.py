@@ -26,6 +26,7 @@ Warning: Fixtures MUST be declared with @action.uses({fixtures})
 else your app will result in undefined behavior
 """
 
+import random
 from py4web import action, request, response, abort, redirect, URL
 from yatl.helpers import A
 from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
@@ -92,5 +93,44 @@ def auth_request_reset_password():
 @action.uses('register.html')
 def auth_regisrer():
     """ Register override """
-    error = ''
-    return {'error': error}
+    req = request
+    errors = []
+    error = '<p>Please correct the following:</p><ul>'
+    is_cancel = False
+    payload = {}
+    if req.method == 'POST':
+        form = req.forms
+        is_cancel = 'cancel' in form.keys()
+        username = f'zforum-user{str(random.random())[2:]}'
+        email = form.get('email', '')
+        password = form.get('password', '')
+        password_again = form.get('password_again', '')
+        first_name = 'zForum'
+        last_name = 'Member'
+        if len(email) == 0:
+            errors.append('<li>Email is required.</li>')
+        if len(password) == 0 or len(password_again) == 0 \
+            or password != password_again:
+            errors.append('<li>Password and Confirmation must match '
+                          'and are required.</li>')
+        payload = {
+            'username': username,
+            'email': email,
+            'password': password,
+            'password_again': password_again,
+            'first_name': first_name,
+            'last_name': last_name
+        }
+        if len(errors) > 0:
+            error += ''.join(errors) + '</ul>'
+        else:
+            registration_results = auth.register(payload)
+            if 'errors' in registration_results and len(
+                registration_results['errors'].keys()) > 0:
+                for err in registration_results['errors'].values():
+                    errors.append(f'<li>{err}</li>')
+                error += ''.join(errors) + '</ul>'
+
+    if (req.method == 'GET' or len(errors) > 0) and not is_cancel:
+        return {'error': error, 'form_fields': payload}
+    return redirect(URL('index'))

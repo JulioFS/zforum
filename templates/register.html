@@ -4,7 +4,7 @@
 [[if error:]]
 <div class="container pt-3">
   <div class="alert alert-warning" role="alert">
-    [[=error]]
+    [[=XML(error)]]
   </div>
 </div>
 [[pass]]
@@ -19,13 +19,15 @@
         </h5>
         <div class="card-body">
           <p class="card-text">
+            <!--
             <div class="mb-3">
               <label for="login-usernme" class="form-label">Username:</label>
               <input type="text" class="form-control" id="login-username" name="username">
             </div>
+            //-->
             <div class="mb-3">
               <label for="login-input" class="form-label">Email Address:</label>
-              <input type="email" class="form-control" id="login-input" name="email">
+              <input type="email" class="form-control" id="login-input" name="email" value="[[=form_fields.get('email', '')]]">
             </div>
             <div class="mb-3">
               <label for="login-passwd" class="form-label">Password:</label>
@@ -35,6 +37,7 @@
               <label for="login-passwd-again" class="form-label">Confirm Password:</label>
               <input type="password" id="login-passwd-again" name="password_again" class="form-control">
             </div>
+            <!--
             <div class="mb-3">
               <label for="login-firstname" class="form-label">First Name:</label>
               <input type="text" class="form-control" id="login-firstname" name="first_name">
@@ -43,6 +46,7 @@
               <label for="login-lastname" class="form-label">Last Name:</label>
               <input type="text" class="form-control" id="login-lastname" name="last_name">
             </div>
+            //-->
 
             <div class="mt-3">Additional Login Providers:
               <a href="[[=URL('auth/plugin/oauth2google/login')]]" title="Google Login ">Log In with Google</a>
