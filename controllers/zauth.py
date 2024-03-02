@@ -39,13 +39,14 @@ def auth_login():
     req = request
     error = None
     is_cancel = False
+    email = ''
     if req.method == 'POST':
         form = req.forms
         email = form.get('email', '')
         passwd = form.get('passwd', '')
         is_cancel = 'cancel' in form.keys()
         # Only call the internal auth methods when it is necessary
-        if (len(email) == 0 or len(passwd) == 0):
+        if len(email) == 0 or len(passwd) == 0:
             error = 'Both email and password must be supplied.'
         else:
             user, error = auth.login(email, passwd)
@@ -56,7 +57,7 @@ def auth_login():
     # redirect to home if auth was successful, otherwise setup the
     # error message and return back to the login screen
     if (req.method == 'GET' or error is not None) and not is_cancel:
-        return {'error': error}
+        return {'error': error, 'email': email}
     # Assume Success..
     return redirect(URL('index'))
 
@@ -126,4 +127,4 @@ def auth_request_reset_password():
             token = auth.request_reset_password(user_email)  #, route='zauth')
     if (req.method == 'GET' or error is not None) and not is_cancel:
         return {'error': error}
-    return redirect(URL('index'))
+    return redirect(URL('index', vars={'action': 'rrp'}))

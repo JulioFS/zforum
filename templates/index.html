@@ -41,3 +41,36 @@
     </div>
   </div>
 </div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3">
+  <div id="toast-wrapper" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
+    <div class="toast-header">
+      <strong class="me-auto">zForum Message</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body" id="toast-content">
+      Hello, world! This is a toast message.
+    </div>
+  </div>
+</div>
+
+[[block page_scripts]]
+<!-- Display the below in the "extended" template (zforum_layout) //-->
+<script>
+  const checkQS = () => {
+    const toastWrapper = document.getElementById('toast-wrapper');
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastWrapper);
+    const srch = location.search;
+    let msg = '';
+    if (srch.indexOf('action=rrp') >= 0) {
+      msg = 'Your request to reset your password has been processed, ' + 
+      'you will shortly receive an email containing the necessary instructions,';
+    }
+    if (msg.length > 0) {
+      document.getElementById('toast-content').innerText = msg;
+      toastBootstrap.show();
+    }
+  };
+  checkQS();
+</script>
+[[end]]
