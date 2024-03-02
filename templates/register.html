@@ -1,7 +1,7 @@
 [[extend "zforum_layout.html"]]
 <!-- /zauth/login (Login Method overriding OOB auth) //-->
 
-[[if error:]]
+[[if len(errors) > 0:]]
 <div class="container pt-3">
   <div class="alert alert-warning" role="alert">
     [[=XML(error)]]

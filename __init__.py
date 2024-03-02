@@ -7,7 +7,8 @@ assert py4web.check_compatible("0.1.20190709.1")
 from .models import db
 
 # by importing controllers you expose the actions defined in it
-from . import controllers
+#from . import controllers
+from .controllers import zauth, public
 
 # optional parameters
 __version__ = "0.0.0"

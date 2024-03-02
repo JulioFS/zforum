@@ -29,18 +29,8 @@ else your app will result in undefined behavior
 import random
 from py4web import action, request, response, abort, redirect, URL
 from yatl.helpers import A
-from .common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
-from .forumhelper import forumhelper as fh
+from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
 
-
-@action('index')
-@action.uses('index.html', auth, T)
-def index():
-    """ /index entry point """
-    user = auth.get_user()
-    channel_desc = fh.get_system_property('zfss_header_html', '')
-    payload = {'channel_desc': channel_desc}
-    return payload
 
 @action('zauth/login', method=['get', 'post'])
 @action.uses('login.html', auth)
@@ -59,34 +49,15 @@ def auth_login():
             error = 'Both email and password must be supplied.'
         else:
             user, error = auth.login(email, passwd)
+            # from auth.py
+            if user:
+                auth.store_user_in_session(user['id'])
 
     # redirect to home if auth was successful, otherwise setup the
     # error message and return back to the login screen
     if (req.method == 'GET' or error is not None) and not is_cancel:
         return {'error': error}
     # Assume Success..
-    return redirect(URL('index'))
-
-@action('zauth/request_reset_password', method=['get', 'post'])
-@action.uses('reset.html', auth)
-def auth_request_reset_password():
-    """ Custom Request Password Reset """
-    req = request
-    error = None
-    is_cancel = False
-    if req.method == 'POST':
-        form = req.forms
-        user_email = form.get('username-email', '')
-        is_cancel = 'cancel' in form.keys()
-        # Only call the internal auth methods when it is necessary
-        if len(user_email) == 0:
-            error = 'A username or email must be supplied.'
-        else:
-            # if token is None, the user was not found, but save from
-            # notifying the user of this to prevent username leaking
-            token = auth.request_reset_password(user_email)
-    if (req.method == 'GET' or error is not None) and not is_cancel:
-        return {'error': error}
     return redirect(URL('index'))
 
 @action('zauth/register', method=['get', 'post'])
@@ -132,5 +103,27 @@ def auth_regisrer():
                 error += ''.join(errors) + '</ul>'
 
     if (req.method == 'GET' or len(errors) > 0) and not is_cancel:
-        return {'error': error, 'form_fields': payload}
+        return {'error': error, 'errors': errors, 'form_fields': payload}
+    return redirect(URL('index'))
+
+@action('zauth/request_reset_password', method=['get', 'post'])
+@action.uses('reset.html', auth)
+def auth_request_reset_password():
+    """ Custom Request Password Reset """
+    req = request
+    error = None
+    is_cancel = False
+    if req.method == 'POST':
+        form = req.forms
+        user_email = form.get('username-email', '')
+        is_cancel = 'cancel' in form.keys()
+        # Only call the internal auth methods when it is necessary
+        if len(user_email) == 0:
+            error = 'A username or email must be supplied.'
+        else:
+            # if token is None, the user was not found, but save from
+            # notifying the user of this to prevent username leaking
+            token = auth.request_reset_password(user_email)  #, route='zauth')
+    if (req.method == 'GET' or error is not None) and not is_cancel:
+        return {'error': error}
     return redirect(URL('index'))
