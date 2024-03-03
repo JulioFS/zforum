@@ -1,0 +1,28 @@
+[[extend 'zforum_layout.html']]
+
+[[if request.get('errors'):]]
+<div class="container pt-3">
+  <div class="alert alert-warning" role="alert">
+    The following error(s) have been detected:
+    <ul>
+      [[for error in errors:]]
+        <li>[[=error]]</li>
+      [[pass]]
+    </ul>
+  </div>
+</div>
+[[pass]]
+
+<div class="container mt-1 mb-2">
+  <div class="row" style="max-height:150px;background-image: url('[[=URL('static', 'images/sample-header.jpg')]]');height:100vh;background-size:cover;background-repeat:no-repeat;">
+    <div class="col border">
+        <h3><div class="m-2 p-2">/c/<i id="new-channel-title">[New Channel]</div></h3>
+        <p id="new-channel-description">Channel Description</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-8 p-3 border border-secondary border-end-0 border-top-0 bg-light-subtle">
+      <p>Vergonio</p>
+    </div>
+  </div>
+</div>
