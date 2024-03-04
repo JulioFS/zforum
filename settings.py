@@ -18,9 +18,9 @@ DB_FOLDER = required_folder(APP_FOLDER, 'databases')
 DB_URI = 'override-in-settings-private'
 DB_POOL_SIZE = 1
 # fake migrate true tells py4web you have the tables in db but you#
-# deleted the metadata. 
-DB_MIGRATE = False # True if DB does not exist else False
-DB_FAKE_MIGRATE = False  # False id DB does not exist else True
+# deleted the metadata.
+DB_MIGRATE = False # True if DB does not exist (ir rebuilding) else False
+DB_FAKE_MIGRATE = False  # True if rebuilding metadata else False
 
 # location where static files are stored:
 STATIC_FOLDER = required_folder(APP_FOLDER, "static")

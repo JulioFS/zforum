@@ -36,6 +36,17 @@ from ..forumhelper import forumhelper as fh
 @action.uses('new-channel.html', auth.user, T)
 def new_channel():
     """ /index entry point """
-    user = auth.get_user()
+    form_submitted = request.method == 'POST'
+    req = request.vars
+    if form_submitted:
+        user = auth.get_user()
+        tag = req.get('tag', None)
+        title = req.get('title', None)
+        content = req.get('content', None)
+        banner = req.get('channel-img', None)
+        is_public = req.get('is-public', None)
+        
+
+        pass
     payload = {}
     return payload

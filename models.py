@@ -24,12 +24,23 @@ db.define_table(
 db.commit()
 
 db.define_table(
-    'channel_admin',
-    Field('user_id', 'reference auth_user'),
+    'channel_subscription',
     Field('channel_id', 'reference channel'),
-    Field('is_active', type='boolean', default=True)
+    Field('user_id', 'reference auth_user'),
+    Field('is_admin', type='boolean', default=False),
+    Field('is_active', type='boolean', default=True),
+    Field('created_by', 'reference auth_user'),
+    Field('created_on', type='datetime', default=now)
 )
 db.commit()
+
+#db.define_table(
+#    'channel_admin',
+#    Field('user_id', 'reference auth_user'),
+#    Field('channel_id', 'reference channel'),
+#    Field('is_active', type='boolean', default=True)
+#)
+#db.commit()
 
 # This table contains both topic and responses, with is_parent properly
 # identifying the topic as 'parent', and parent_id (being not null)

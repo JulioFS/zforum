@@ -36,8 +36,9 @@ db = DAL(
     settings.DB_URI,
     folder=settings.DB_FOLDER,
     pool_size=settings.DB_POOL_SIZE,
+    #fake_migrate_all=True
     migrate=settings.DB_MIGRATE,
-    fake_migrate=settings.DB_FAKE_MIGRATE,
+    fake_migrate=settings.DB_FAKE_MIGRATE
 )
 
 # #######################################################
