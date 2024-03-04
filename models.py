@@ -4,7 +4,7 @@ ZForum database model.
 
 import datetime
 #from pydal.validators import *
-from .common import db, Field
+from .common import db, Field, groups
 
 now = datetime.datetime.utcnow
 

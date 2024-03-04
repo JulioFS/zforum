@@ -32,3 +32,15 @@ html {
   src: url('/zforum/static/fonts/inter-v13-latin-700.woff2') format('woff2');
   /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
+
+.zforum-header {
+  max-height:150px;
+  background-image: url('../images/sample-header.jpg');
+  height:100vh;
+  background-size:cover;
+  background-repeat:no-repeat;
+}
+
+.zforum-h-150 {
+  height: 150px !important;
+}

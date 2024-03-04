@@ -34,9 +34,10 @@ from ..forumhelper import forumhelper as fh
 
 
 @action('index')
-@action.uses('index.html', auth, T)
+@action.uses('index.html', auth, db, T)
 def index():
     """ /index entry point """
+    #groups.add(1, 'manager')
     user = auth.get_user()
     channel_desc = fh.get_system_property('zfss_header_html', '')
     payload = {'channel_desc': channel_desc}

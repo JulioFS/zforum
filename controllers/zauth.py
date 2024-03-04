@@ -30,6 +30,7 @@ import random
 from py4web import action, request, response, abort, redirect, URL
 from yatl.helpers import A
 from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
+from pydal.validators import CRYPT
 
 
 @action('zauth/login', method=['get', 'post'])
@@ -85,11 +86,12 @@ def auth_regisrer():
             or password != password_again:
             errors.append('<li>Password and Confirmation must match '
                           'and are required.</li>')
+        crypt_password = CRYPT()(password)[0]
         payload = {
             'username': username,
             'email': email,
-            'password': password,
-            'password_again': password_again,
+            'password': crypt_password,
+            'password_again': crypt_password,
             'first_name': first_name,
             'last_name': last_name
         }
@@ -105,7 +107,7 @@ def auth_regisrer():
 
     if (req.method == 'GET' or len(errors) > 0) and not is_cancel:
         return {'error': error, 'errors': errors, 'form_fields': payload}
-    return redirect(URL('index'))
+    return redirect(URL('index', vars={'action': 'reg'}))
 
 @action('zauth/request_reset_password', method=['get', 'post'])
 @action.uses('reset.html', auth)

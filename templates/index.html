@@ -1,8 +1,8 @@
 [[extend 'zforum_layout.html']]
 
 <div class="container mt-1 mb-2">
-  <div class="row" style="max-height:150px;background-image: url('[[=URL('static', 'images/sample-header.jpg')]]');height:100vh;background-size:cover;background-repeat:no-repeat;">
-    <div class="col border">
+  <div class="row zforum-header">
+    <div class="col border zforum-h-150">
         <h3><div class="m-2 p-2">/c/zForum</div></h3>
         <p>[[=XML(channel_desc)]]
     </div>
@@ -69,7 +69,12 @@
     let msg = '';
     if (srch.indexOf('action=rrp') >= 0) {
       msg = 'Your request to reset your password has been processed, ' + 
-      'you will shortly receive an email containing the necessary instructions,';
+      'you will shortly receive an email containing a link to reset your ' +
+      'password.';
+    } else if (srch.indexOf('action=reg') >= 0) {
+      msg = 'Your request for registration has been processed, ' +
+      'you will shortly receive an email containing a link to verify your ' +
+      'account.';
     }
     if (msg.length > 0) {
       document.getElementById('toast-content').innerText = msg;
