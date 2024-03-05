@@ -33,11 +33,10 @@ from ..common import db, session, T, cache, auth, logger, authenticated, unauthe
 from ..forumhelper import forumhelper as fh
 
 
-@action('new-topic')
+@action('new_topic')
 @action.uses('index.html', auth, T)
 def new_topic():
     """ /index entry point """
     user = auth.get_user()
-    channel_desc = fh.get_system_property('zfss_header_html', '')
-    payload = {'channel_desc': channel_desc}
-    return payload
+    return {}
+

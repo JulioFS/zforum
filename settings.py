@@ -19,7 +19,7 @@ DB_URI = 'override-in-settings-private'
 DB_POOL_SIZE = 1
 # fake migrate true tells py4web you have the tables in db but you#
 # deleted the metadata.
-DB_MIGRATE = False # True if DB does not exist (ir rebuilding) else False
+DB_MIGRATE = False # True if DB does not exist (or rebuilding) else False
 DB_FAKE_MIGRATE = False  # True if rebuilding metadata else False
 
 # location where static files are stored:
