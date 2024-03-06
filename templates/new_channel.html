@@ -47,7 +47,8 @@
           <div class="col">
             <div class="mb-3">
               <label for="tag" class="form-label">Channel Tag:</label>
-              <input type="text" class="form-control" id="tag" aria-describedby="tag-help">
+              <input type="text" class="form-control" value="[[=request.forms.get('tag', '')]]"
+                      id="tag" name="tag" aria-describedby="tag-help">
               <div id="tag-help" class="form-text">A "tag" is the name of your channel,
                 like a <i>category</i>, and it will be unique. Please note that some tags
                 are not allowed, such as racial slurs, sexually in nature, and others.
@@ -59,7 +60,8 @@
           <div class="col">
             <div class="mb-3">
               <label for="title" class="form-label">Channel Title:</label>
-              <input type="text" class="form-control" id="title" aria-describedby="title-help">
+              <input type="text" class="form-control" id="title" aria-describedby="title-help"
+                value="[[=request.forms.get('title', '')]]" name="title">
               <div id="title-help" class="form-text">Short title of your channel, usually
                 consisting of a few sentences. This value is required.
               </div>
@@ -70,7 +72,9 @@
           <div class="col">
             <div class="mb-3">
               <label for="content" class="form-label">Channel Description:</label>
-              <textarea class="form-control" id="content" rows="3" aria-describedby="desc-help"></textarea>
+              <textarea class="form-control" id="content" rows="3"
+                name="content" value="[[=request.forms.get('content', '')]]"
+                aria-describedby="desc-help"></textarea>
               <div id="desc-help" class="form-text">Blob, or a more detailed channel information
                 in markdown format, html is allowed, but will be sanitized. 
               </div>

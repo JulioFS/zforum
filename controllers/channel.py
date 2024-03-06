@@ -49,6 +49,14 @@ def new_channel():
             content = req.get('content', None)
             banner = req.get('channel-img', None)
             is_public = req.get('is-public', None)
+            payload = {
+                'user': user,
+                'tag': tag,
+                'title': title,
+                'content': content,
+                'banner': banner,
+                'is_public': is_public
+            }
             if title is None:
                 errors.append('Title is required.')
             if content is None:

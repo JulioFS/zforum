@@ -40,5 +40,6 @@ def index():
     #groups.add(1, 'manager')
     user = auth.get_user()
     channel_desc = fh.get_system_property('zfss_header_html', '')
-    payload = {'channel_desc': channel_desc}
+    is_admin = fh.is_sysadmin()
+    payload = {'channel_desc': channel_desc, 'is_admin': is_admin, 'usr': user}
     return payload

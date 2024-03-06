@@ -5,7 +5,7 @@ import hashlib
 import uuid
 import os
 from markdown import markdown
-from .common import db, groups
+from .common import db, groups, auth
 
 # Use imghdr (imghdr.what(fname[,stream])) to find out image type
 
@@ -39,16 +39,23 @@ class ForumHelper:
                                 hashname[6:9], hashname, fname),
             'fname': fname
         }
-    
-    def is_sysadmin(self, user_id):
+
+    def is_sysadmin(self, user_id=None):
         """ Returns true if the user is in the Managers group,
-        (See common.py for the definition of the groups table)"""
-        return [True if 'manager' in groups.get(user_id) else False]
-    
+        (See common.py for the definition of the groups table)
+        """
+        if user_id is None:
+            # If userid is not passed, attempt to ge the current user.
+            user_id = auth.get_user().get('id', None)
+            if user_id is None:
+                return False
+        return 'manager' in groups.get(user_id)
+
     def is_channel_admin(self, user_id, channel_id):
         """ A channel Admin is any authenticated user that creates
         a own channel, however, a channel admin (or a sysadmin) can make
-        any user administrative rights to any channel they control. """
+        any user administrative rights to any channel they control.
+        """
         return db(
             db.channel_admin.channel_id==channel_id &
             db.channel_admin.is_active &
