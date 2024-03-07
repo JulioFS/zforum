@@ -34,21 +34,28 @@ from ..common import db, session, T, cache, auth, logger, authenticated, unauthe
 from ..forumhelper import forumhelper as fh
 
 @action('new_channel', method=['get', 'post'])
-@action.uses('new_channel.html', auth.user, T)
+@action.uses('new_channel.html', auth, T)
 def new_channel():
     """ /index entry point """
     errors = []
     payload = {}
+    user = auth.get_user()
+    if user is None:
+        redirect(URL('exception'))
     form_submitted = request.method == 'POST'
     if form_submitted:
         req = request.forms
         if 'create-button' in req:
             user = auth.get_user()
-            tag = req.get('tag', None)
-            title = req.get('title', None)
-            content = req.get('content', None)
-            banner = req.get('channel-img', None)
-            is_public = req.get('is-public', None)
+            tag = req.get('tag', '').strip()
+            title = req.get('title', '')
+            content = req.get('content', '')
+            # TODO Handle image in FS
+            # <ombott.request_pkg.helpers.FileUpload object at 0x107ecfc40>
+            banner = request.get('channel-img', '')
+            # Checkboxes with uncheck state will not be available in
+            # request.forms, otherwise it will contain the identifier 'on'
+            is_public = req.get('is-public', False) and True
             payload = {
                 'user': user,
                 'tag': tag,
@@ -57,16 +64,16 @@ def new_channel():
                 'banner': banner,
                 'is_public': is_public
             }
-            if title is None:
+            if not title:
                 errors.append('Title is required.')
-            if content is None:
-                errors.append('Content is required.')
-            if tag is None:
+            if not content:
+                errors.append('Channel description is required.')
+            if not tag:
                 errors.append('Tag is required.')
             if not errors: # Only run a DB query if it is really needed.
                 if tag.find(' ') >= 0 or profanity.contains_profanity(tag):
                     errors.append('Tag is required, must not contain spaces, '
-                                  'or contain a curse word.')
+                                  'curse word(s), or invalid name.')
                 else:
                     # Does the tag even exist?
                     tag_exists = db(db.channel.tag == tag).count() > 0
@@ -74,8 +81,15 @@ def new_channel():
                         errors.append('Tag already exists.')
             if not errors:
                 # Create Channel!
-                errors.append('Channel Created!')
-                return redirect(URL(f'c/{tag}'))
+                db.channel.insert(
+                    tag=tag,
+                    title=title,
+                    content=content,
+                    created_by=user['id'],
+                    modified_by=user['id'],
+                    owner_id=user['id'],
+                    is_public=is_public)
+                return redirect(URL(f'c/{tag}', vars={'new': 'true'}))
         else:
             return redirect(URL('index'))
 
@@ -85,4 +99,21 @@ def new_channel():
 @action.uses('channel_index.html', auth, T)
 def channel_index(tag):
     """ Main Index for a channel """
-    return {}
+    # Does it exist
+    tag_record = db(db.channel.tag == tag).select(db.channel.ALL)
+    if tag_record:
+        # TODO Handle considerations for private channels
+        is_public = tag_record[0].is_public
+        channel_info = {
+            'title': tag_record[0].title,
+            'content': tag_record[0].content,
+            'is_public': is_public
+        }
+        payload = {'tag': tag, 'channel_info': channel_info}
+        return payload
+    return redirect(URL('ex/tagnotfound'))
+
+@action('c/<tag>/<channel_action>')
+def channel_action(tag, channel_action):
+    """ GET actions for channel """
+    redirect(URL(f'c/{tag}', vars={'subscribed': 'true'}))

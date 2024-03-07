@@ -43,3 +43,17 @@ def index():
     is_admin = fh.is_sysadmin()
     payload = {'channel_desc': channel_desc, 'is_admin': is_admin, 'usr': user}
     return payload
+
+@action('ex/<err>')
+@action.uses('exception.html')
+def exception(err):
+    """ Handles handled exceptions (controlled) """
+    error_message = 'Unknown Exception.'
+    if err:
+        if err == 'unauthorized':
+            error_message = ('Not authorized to access this resource, '
+                             'please contact the forum administrator.')
+        elif err == 'tagnotfound':
+            error_message = ('Unable to find the selected channel '
+                             'or you do not have the proper access.')
+    return {'error': error_message}

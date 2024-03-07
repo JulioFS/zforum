@@ -96,7 +96,9 @@
         <div class="row">
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="" id="is-public" checked>
+              <input class="form-check-input" type="checkbox" id="is-public"
+                name="is-public"
+                [[if request.forms.get('is-public', '') or request.method == 'GET':]]checked[[pass]]>
               <label class="form-check-label" for="is-public">
                 This channel is Public
               </label>
