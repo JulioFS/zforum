@@ -27,7 +27,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-tv"></i> Channels</a>
+            <a class="nav-link" href="[[=URL('channels')]]"><i class="bi bi-tv"></i> Channels</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-trophy"></i> Sponsors</a>
@@ -43,13 +43,22 @@
 
         <div class="text-end">
           [[if globals().get('user'):]]
-            <a role="button" class="btn btn-light ms-2" id="profile-button" href="[[=URL('auth/profile')]]">Profile</a>
+            <!-- If system detects user already logged in, allow profile: -->
+            <!-- <a role="button" class="btn btn-light ms-2" id="profile-button" href="[[=URL('auth/profile')]]">Profile</a> //-->
+            <a class="btn btn-dark" href="[[=URL('zauth/profile')]]" role="button">My Profile</a>
             [[if 'change_password' in globals().get('actions', {}).get('allowed_actions', {}):]]
-              <a role="button" class="btn btn-light" id="password-button" href="[[=URL('auth/change_password')]]">Password</a>
+              <!-- If password change is allowed: //-->
+              <!-- TODO: Needs Change?? -->
+              <a role="button" class="btn btn-dark" id="password-button" href="[[=URL('auth/change_password')]]">Password</a>
             [[pass]]
-            <a role="button" class="btn btn-light" id="logout-button" href="[[=URL('auth/logout')]]">Logout</a>
+              <!-- User logged in.. allow logout //-->
+              <!-- <a role="button" class="btn btn-light" id="logout-button" href="[[=URL('auth/logout')]]">Logout</a> //-->
+              <a class="btn btn-dark" href="[[=URL('auth/logout')]]" role="button">Log Out</a>
           [[else:]]
-            <a class="btn btn-light ms-2" role="button" id="login-button" href="[[=URL('auth/login')]]">Login</a>
+            <!-- User not logged in, allow for is or register .. -->
+            <a class="btn btn-dark" href="[[=URL('zauth/login')]]" role="button">Log In</a>
+            <a class="btn btn-dark" href="[[=URL('zauth/register')]]" role="button">Sign Up</a>
+            <!-- <a class="btn btn-light ms-2" role="button" id="login-button" href="[[=URL('auth/login')]]">Login</a> //-->
           [[pass]]
         </div>
 

@@ -117,3 +117,19 @@ def channel_index(tag):
 def channel_action(tag, channel_action):
     """ GET actions for channel """
     redirect(URL(f'c/{tag}', vars={'subscribed': 'true'}))
+
+@action('channels')
+@action.uses('channels.html', auth, T)
+def channels():
+    """ Retrieves all channels that the user is allowed to
+    access, channels that are returned are those in which:
+    channel.is_public = True
+    channel.owner_id is the currently auth user.
+    User is a channel admin (via channel_admin.user_id *and is_active*)
+    The order of the retrieval should be based on several factors, essentially
+    those channels with more topic views and upvotes should be moved higher,
+    another option is to order by the last date any of its topics were 
+    """
+    # Ok, before we get all fancy, let's return a basic list of channels
+    # c/xyz | This is the channel title | 100 Topics | 200 comments
+    return {'channels': [1, 2, 3]}

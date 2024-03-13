@@ -4,7 +4,7 @@
   <div class="row zforum-header">
     <div class="col border zforum-h-150">
         <h3><div class="m-2 p-2">/c/[[=tag]]</div></h3>
-        <p>[[=XML(channel_info['title'])]]
+        <p>[[=XML(channel_info['title'])]]</p>
     </div>
   </div>
   <div class="row">
@@ -32,10 +32,10 @@
           <a class="btn btn-primary" href="[[=URL('newtopic')]]" role="button">New Topic</a>
           <a class="btn btn-primary" href="[[=URL(f'c/{tag}/subscribe')]]" role="button" onclick="return confirm('Confirm Channel Subscription?');">Subscribe</a>
           <a class="btn btn-primary" href="[[=URL('zauth/profile')]]" role="button">My Profile</a>
+          <!--
           <a class="btn btn-primary" href="[[=URL('auth/logout')]]" role="button">Log Out</a>
-        [[else:]]
           <a class="btn btn-primary" href="[[=URL('zauth/login')]]" role="button">Log In</a>
-          <a class="btn btn-primary" href="[[=URL('zauth/register')]]" role="button">Sign Up</a>
+          <a class="btn btn-primary" href="[[=URL('zauth/register')]]" role="button">Sign Up</a> //-->
         [[pass]]
       </div>
 

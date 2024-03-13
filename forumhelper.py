@@ -61,5 +61,44 @@ class ForumHelper:
             db.channel_admin.is_active &
             db.channel_admin.user_id==user_id).count() > 0
 
+    def get_user_properties(self, user_id=None):
+        """ Returns a list of properties (ordered by Property Name)
+        alongside the values belonging to the user queried, if user
+        does not have the property, then it returns the set default value.
+        """
+        # Who is the user?
+        if user_id is None:
+            # If userid is not passed, attempt to ge the current user.
+            user_id = auth.get_user().get('id', None)
+            if user_id is None:
+                return []
+        # Read All available properties:
+        all_user_props_r = db().select(
+            db.member_setting_template.ALL,
+            orderby=db.member_setting_template.name)
+        # Read "used" member properties
+        user_props_r = db(
+            db.member_setting.user_id == user_id).select(
+                db.member_setting.ALL)
+        # Create our list of properties:
+        # [{'Property Name': {'id': id, 'description': desc, 'value': value}}]
+
+        # Populate a mapping of the current user's properties
+        user_prop_map = {}
+        if user_props_r:
+            for user_prop in user_props_r:
+                user_prop_map[user_prop.template_id] = user_prop.value
+
+        # Loop thru the system properties and plug in the values of the
+        # user's if applicable
+        all_props = []
+        for prop in all_user_props_r:
+            all_props.append(
+                {prop.name: {
+                    'id': prop.id,
+                    'description': prop.description,
+                    'value': user_prop_map.get(prop.id, prop.value)}})
+        return all_props
+
 # Expose a single instance
 forumhelper = ForumHelper()

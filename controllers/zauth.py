@@ -130,3 +130,17 @@ def auth_request_reset_password():
     if (req.method == 'GET' or error is not None) and not is_cancel:
         return {'error': error}
     return redirect(URL('index', vars={'action': 'rrp'}))
+
+@action('zauth/profile', method=['get', 'post'])
+@action.uses('profile.html')
+def profile():
+    """ Main user profile, not entirely similar to OOB """
+    req = request
+    errors = []
+    payload = {}
+    user = auth.get_user()
+    if user is None:
+        redirect(URL('ex/unauthorized'))
+    if req.method == 'POST':
+        x=1
+    return {'errors': errors}

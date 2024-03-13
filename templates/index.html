@@ -33,15 +33,15 @@
         </svg>
       </a>
 
-      <div class="d-grid gap-2 mt-4">
+      <div class="d-grid gap-2 mt-4 d-md-flex justify-content-md-end">
         [[if globals().get('user'):]]
           <a class="btn btn-primary" href="[[=URL('new_channel')]]" role="button">New Channel</a>
           <a class="btn btn-primary" href="[[=URL('new_topic')]]" role="button">New Topic</a>
+          <!--
           <a class="btn btn-primary" href="[[=URL('zauth/profile')]]" role="button">My Profile</a>
           <a class="btn btn-primary" href="[[=URL('auth/logout')]]" role="button">Log Out</a>
-        [[else:]]
           <a class="btn btn-primary" href="[[=URL('zauth/login')]]" role="button">Log In</a>
-          <a class="btn btn-primary" href="[[=URL('zauth/register')]]" role="button">Sign Up</a>
+          <a class="btn btn-primary" href="[[=URL('zauth/register')]]" role="button">Sign Up</a> //-->
         [[pass]]
       </div>
 
