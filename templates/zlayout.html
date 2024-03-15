@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+  <base href="[[=URL('static')]]/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>zForum, a simple, no-ads Message Board System by rustix.DEV</title>
+  <link href="[[=URL('static', 'bootstrap-5.3.3-dist/css/bootstrap.min.css')]]" rel="stylesheet">
+  <link href="[[=URL('static', 'bootstrap-icons-1.11.3/font/bootstrap-icons.min.css')]]" rel="stylesheet">
+  <link href="[[=URL('static', 'css/zforum.css')]]" rel="stylesheet">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="[[=URL('index')]]">zForum<span class="fs-6">.org</span></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="[[=URL('index')]]">
+              Home
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="[[=URL('channels')]]"><i class="bi bi-tv"></i> Channels</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-trophy"></i> Sponsors</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-clipboard-check"></i> Rules</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-file-earmark-person"></i> About</a>
+          </li>
+        </ul>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </nav>
+
+  
+  <!-- Main 2-column page -->
+  <div class="container-fluid vh-100 d-flex flex-column">
+    <div class="row zforum-header flex-shrink-0">
+      <div class="col border zforum-h-150">
+          [[block channel_header]]
+          <h3><div class="m-2 p-2">~/c/zForum</div></h3>
+          [[if 'channel_desc' in globals():]]<p>[[=XML(channel_desc)]]</p>[[pass]]
+          [[end]]
+      </div>
+    </div>
+    <div class="row flex-grow-1" style="min-height:0">
+      <div class="col-sm-9 p-3 border border-secondary border-end-0 border-top-0 bg-light-subtle m-0 h-100 d-flex flex-column" style="overflow-y: scroll;">
+        <!-- Main Content -->
+        [[include]]
+      </div>
+  
+      <!-- Right Nav - Move to own block [?] -->
+      <div class="col-sm-3 feature p-3 bg-dark border border-secondary border-top-0 m-0 mh-100 d-flex flex-column">
+  
+        [[block subnav_lead]]
+        <div class="feature-icon d-inline-flex align-items-start justify-content-start fs-2 mb-3">
+          <i class="bi bi-tv"></i>
+        </div>
+        <h3 class="fs-2 text-body-emphasis">Welcome Human</h3>
+        <p>You've reached the main zForum channel, you are free to create your own channel
+          or browse through the existing channels and topics. Topics shown on this
+          page are those ranked higher by the community, however you may sort by newest
+          instead if you wish
+        </p>
+        <a href="#" class="icon-link">
+          View All Channels
+          <svg class="bi">
+            <use xlink:href="#chevron-right"></use>
+          </svg>
+        </a>
+        [[end]]
+  
+        <div class="d-grid gap-2 mt-4">
+          [[if globals().get('user'):]]
+            <a class="btn btn-primary" href="[[=URL('new_channel')]]" role="button">New Channel</a>
+            <a class="btn btn-primary" href="[[=URL('new_topic')]]" role="button">New Topic</a>
+            <!--
+            <a class="btn btn-primary" href="[[=URL('zauth/profile')]]" role="button">My Profile</a>
+            <a class="btn btn-primary" href="[[=URL('auth/logout')]]" role="button">Log Out</a>
+            <a class="btn btn-primary" href="[[=URL('zauth/login')]]" role="button">Log In</a>
+            <a class="btn btn-primary" href="[[=URL('zauth/register')]]" role="button">Sign Up</a> //-->
+          [[pass]]
+  
+          [[if globals().get('user'):]]
+              <!-- If system detects user already logged in, allow profile: -->
+              <!-- <a role="button" class="btn btn-light ms-2" id="profile-button" href="[[=URL('auth/profile')]]">Profile</a> //-->
+              <a class="btn btn-primary" href="[[=URL('zauth/profile')]]" role="button">My Profile</a>
+              [[if 'change_password' in globals().get('actions', {}).get('allowed_actions', {}):]]
+                <!-- If password change is allowed: //-->
+                <!-- TODO: Needs Change?? -->
+                <a role="button" class="btn btn-primary" id="password-button" href="[[=URL('auth/change_password')]]">Password</a>
+              [[pass]]
+                <!-- User logged in.. allow logout //-->
+                <!-- <a role="button" class="btn btn-light" id="logout-button" href="[[=URL('auth/logout')]]">Logout</a> //-->
+                <a class="btn btn-primary" href="[[=URL('auth/logout')]]" role="button">Log Out</a>
+            [[else:]]
+              <!-- User not logged in, allow for is or register .. -->
+              <a class="btn btn-primary" href="[[=URL('zauth/login')]]" role="button">Log In</a>
+              <a class="btn btn-primary" href="[[=URL('zauth/register')]]" role="button">Sign Up</a>
+              <!-- <a class="btn btn-light ms-2" role="button" id="login-button" href="[[=URL('auth/login')]]">Login</a> //-->
+            [[pass]]
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+  <script src="[[=URL('static', 'bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js')]]"></script>
+  <script src="[[=URL('static', 'js/luxon.min.js')]]"></script>
+  [[block page_scripts]]<!-- individual pages can add scripts here -->[[end]]
+</body>
+
+</html>

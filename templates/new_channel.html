@@ -1,4 +1,4 @@
-[[extend 'zforum_layout.html']]
+[[extend 'zlayout.html']]
 
 [[if errors:]]
 <div class="container pt-3">
@@ -13,15 +13,10 @@
 </div>
 [[pass]]
 
-<div class="container mt-1 mb-2">
-  <div class="row zforum-header">
-    <div class="col border zforum-h-150">
-        <h3><div class="m-2 p-2">/c/<i id="new-channel-title">[New Channel]</i></div></h3>
-        <p><i id="new-channel-description">[Channel Description.]</i></p>
-    </div>
-  </div>
+<div class="container">
+
   <div class="row">
-    <div class="col-sm-6 p-3 border border-secondary border-end-0 border-top-0 bg-light-subtle">
+    <div class="col-sm-4 p-3 bg-light-subtle">
       <h4>New Channel Intructions</h4>
       <p class="mt-3">When you create a new channel, you will become the <b>administrator</b> of it.
         You will have the ability to manage it with the following options:</p>
@@ -40,7 +35,7 @@
       </ul>
     </div>
 
-    <div class="col-sm-6 p-3 border border-secondary border-end-0 border-top-0 bg-light-subtle">
+    <div class="col-sm-8 p-3 border-secondary border-start bg-light-subtle">
 
       <form method="post" enctype="multipart/form-data" action="[[=URL('new_channel')]]">
         <div class="row">

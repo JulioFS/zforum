@@ -27,7 +27,7 @@ else your app will result in undefined behavior
 """
 
 import random
-from profanity import profanity
+from better_profanity import profanity
 from py4web import action, request, response, abort, redirect, URL
 from yatl.helpers import A
 from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups

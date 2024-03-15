@@ -1,53 +1,11 @@
-[[extend 'zforum_layout.html']]
+[[extend 'zlayout.html']]
 
-<div class="container mt-1 mb-2">
-  <div class="row zforum-header">
-    <div class="col border zforum-h-150">
-        <h3><div class="m-2 p-2">/c/zForum</div></h3>
-        <p>[[=XML(channel_desc)]]
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-8 p-3 border border-secondary border-end-0 border-top-0 bg-light-subtle">
-      <p>Vergonio</p>
-      <p>Is Admin: [[=is_admin]]</p>
-      <p>[[=usr]]
-      <p>[[=globals()]]</p>
-    </div>
+<p>Vergonio</p>
+<p>Is Admin: [[=is_admin]]</p>
+<p>[[=usr]]
+<p>[[=globals()]]</p>
 
-    <!-- Right Nav - Move to own block [?] -->
-    <div class="feature col-sm-4 p-3 bg-dark border border-secondary border-top-0">
-      <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
-        <i class="bi bi-tv"></i>
-      </div>
-      <h3 class="fs-2 text-body-emphasis">Welcome Human</h3>
-      <p>You've reached the main zForum channel, you are free to create your own channel
-        or browse through the existing channels and topics. Topics shown on this
-        page are those ranked higher by the community, however you may sort by newest
-        instead if you wish
-      </p>
-      <a href="#" class="icon-link">
-        View All Channels
-        <svg class="bi">
-          <use xlink:href="#chevron-right"></use>
-        </svg>
-      </a>
-
-      <div class="d-grid gap-2 mt-4 d-md-flex justify-content-md-end">
-        [[if globals().get('user'):]]
-          <a class="btn btn-primary" href="[[=URL('new_channel')]]" role="button">New Channel</a>
-          <a class="btn btn-primary" href="[[=URL('new_topic')]]" role="button">New Topic</a>
-          <!--
-          <a class="btn btn-primary" href="[[=URL('zauth/profile')]]" role="button">My Profile</a>
-          <a class="btn btn-primary" href="[[=URL('auth/logout')]]" role="button">Log Out</a>
-          <a class="btn btn-primary" href="[[=URL('zauth/login')]]" role="button">Log In</a>
-          <a class="btn btn-primary" href="[[=URL('zauth/register')]]" role="button">Sign Up</a> //-->
-        [[pass]]
-      </div>
-
-    </div>
-  </div>
-</div>
+<!-- Add a block subnav_lead to override information -->
 
 <div class="toast-container position-fixed top-0 end-0 p-3">
   <div id="toast-wrapper" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
