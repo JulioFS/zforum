@@ -29,14 +29,14 @@ for item in settings.LOGGERS:
     logger.setLevel(getattr(logging, level.upper(), "DEBUG"))
     logger.addHandler(handler)
 
-# #######################################################
-# connect to db
-# #######################################################
+
+# Main DB connection.
+
 db = DAL(
     settings.DB_URI,
     folder=settings.DB_FOLDER,
     pool_size=settings.DB_POOL_SIZE,
-    #fake_migrate_all=True
+    #fake_migrate_all=True,
     migrate=settings.DB_MIGRATE,
     fake_migrate=settings.DB_FAKE_MIGRATE
 )

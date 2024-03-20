@@ -28,6 +28,7 @@ else your app will result in undefined behavior
 
 import random
 from better_profanity import profanity
+from lorem_text import lorem
 from py4web import action, request, response, abort, redirect, URL
 from yatl.helpers import A
 from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
@@ -105,8 +106,10 @@ def channel_index(tag):
         # TODO Handle considerations for private channels
         is_public = tag_record[0].is_public
         channel_info = {
+            'tag': tag_record[0].tag,
             'title': tag_record[0].title,
             'content': tag_record[0].content,
+            'banner': tag_record[0].banner,
             'is_public': is_public
         }
         payload = {'tag': tag, 'channel_info': channel_info}
@@ -132,4 +135,5 @@ def channels():
     """
     # Ok, before we get all fancy, let's return a basic list of channels
     # c/xyz | This is the channel title | 100 Topics | 200 comments
-    return {'channels': [1, 2, 3]}
+    all_channels = db().select(db.channel.ALL, orderby=db.channel.modified_on)
+    return {'channels': all_channels}

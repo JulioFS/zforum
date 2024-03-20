@@ -13,6 +13,9 @@
 </div>
 [[pass]]
 
+<code>[[=request.forms]]
+</code>
+
 <div class="container">
 
   <div class="row">
@@ -67,9 +70,8 @@
           <div class="col">
             <div class="mb-3">
               <label for="content" class="form-label">Channel Description:</label>
-              <textarea class="form-control" id="content" rows="3"
-                name="content" value="[[=request.forms.get('content', '')]]"
-                aria-describedby="desc-help"></textarea>
+              <textarea class="form-control" id="content" rows="3" name="content"
+                aria-describedby="desc-help">[[=request.forms.get('content', '')]]</textarea>
               <div id="desc-help" class="form-text">Blob, or a more detailed channel information
                 in markdown format, html is allowed, but will be sanitized. 
               </div>

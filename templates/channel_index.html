@@ -1,82 +1,16 @@
-[[extend 'zforum_layout.html']]
+[[extend 'zlayout.html']]
 
-<div class="container mt-1 mb-2">
-  <div class="row zforum-header">
-    <div class="col border zforum-h-150">
-        <h3><div class="m-2 p-2">/c/[[=tag]]</div></h3>
-        <p>[[=XML(channel_info['title'])]]</p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-8 p-3 border border-secondary border-end-0 border-top-0 bg-light-subtle">
-      Channel topics here
-    </div>
-
-    <!-- Right Nav - Move to own block [?] -->
-    <div class="feature col-sm-4 p-3 bg-dark border border-secondary border-top-0">
-      <div class="feature-icon d-inline-flex align-items-center justify-content-center fs-2 mb-3">
-        <i class="bi bi-tv"></i>
-      </div>
-      <h3 class="fs-2 text-body-emphasis">Welcome Human</h3>
-      <p>[[=channel_info['content']]]
-      </p>
-      <a href="#" class="icon-link">
-        View All Channels
-        <svg class="bi">
-          <use xlink:href="#chevron-right"></use>
-        </svg>
-      </a>
-
-      <div class="d-grid gap-2 mt-4">
-        [[if globals().get('user'):]]
-          <a class="btn btn-primary" href="[[=URL('newtopic')]]" role="button">New Topic</a>
-          <a class="btn btn-primary" href="[[=URL(f'c/{tag}/subscribe')]]" role="button" onclick="return confirm('Confirm Channel Subscription?');">Subscribe</a>
-          <a class="btn btn-primary" href="[[=URL('zauth/profile')]]" role="button">My Profile</a>
-          <!--
-          <a class="btn btn-primary" href="[[=URL('auth/logout')]]" role="button">Log Out</a>
-          <a class="btn btn-primary" href="[[=URL('zauth/login')]]" role="button">Log In</a>
-          <a class="btn btn-primary" href="[[=URL('zauth/register')]]" role="button">Sign Up</a> //-->
-        [[pass]]
-      </div>
-
-    </div>
+[[block channel_header]]
+<div class="row [[if not channel_info['banner']:]]zforum-header[[pass]] flex-shrink-0"
+[[if channel_info['banner']:]]style="background-size:cover;background-repeat:no-repeat;background-image:url('[[=channel_info['banner']]]');"[[pass]]>
+  <div class="col border zforum-h-150">
+    <h3><div class="m-2 p-2">~/c/[[=channel_info['tag']]]</div></h3>
+    <p>[[=XML(channel_info['title'])]]</p>
   </div>
 </div>
+[[end]]
 
-<div class="toast-container position-fixed top-0 end-0 p-3">
-  <div id="toast-wrapper" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
-    <div class="toast-header">
-      <strong class="me-auto">zForum Message</strong>
-      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-    <div class="toast-body" id="toast-content">
-      Hello, world! This is a toast message.
-    </div>
-  </div>
-</div>
-
-[[block page_scripts]]
-<!-- Display the below in the "extended" template (zforum_layout) //-->
-<script>
-  const checkQS = () => {
-    const toastWrapper = document.getElementById('toast-wrapper');
-    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastWrapper);
-    const srch = location.search;
-    let msg = '';
-    if (srch.indexOf('action=rrp') >= 0) {
-      msg = 'Your request to reset your password has been processed, ' + 
-      'you will shortly receive an email containing a link to reset your ' +
-      'password.';
-    } else if (srch.indexOf('action=reg') >= 0) {
-      msg = 'Your request for registration has been processed, ' +
-      'you will shortly receive an email containing a link to verify your ' +
-      'account.';
-    }
-    if (msg.length > 0) {
-      document.getElementById('toast-content').innerText = msg;
-      toastBootstrap.show();
-    }
-  };
-  checkQS();
-</script>
+[[block subnav_lead]]
+<h3 class="fs-2 text-body-emphasis">[[=channel_info['tag']]]</h3>
+<p>[[=XML(channel_info['content'])]]</p>
 [[end]]

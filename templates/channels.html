@@ -1,33 +1,14 @@
-[[extend 'zforum_layout.html']]
+[[extend 'zlayout.html']]
 
-<div class="container mt-0">
-  <div class="row zforum-header">
-    <div class="col border zforum-h-150">
-        <h3><div class="m-2 p-2">Channels</div></h3>
+<div class="container">
+  [[for c in channels:]]
+  <div class="card">
+    <h5 class="card-header">~/c/Blah</h5>
+    <div class="card-body">
+      <h5 class="card-title">Special title treatment</h5>
+      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+      <a href="#" class="btn btn-primary">Go somewhere</a>
     </div>
   </div>
-</div>
-<div class="container border border-top-0 py-4">
-  <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Description</th>
-        <th scope="col">Topics</th>
-        <th scope="col">Comments</th>
-        <th scope="col">Views</th>
-      </tr>
-    </thead>
-    [[for c in channels:]]
-      <tr>
-        <td>Static</td>
-        <td>Static</td>
-        <td>Static</td>
-        <td>Static</td>
-        <td>Static</td>
-      </tr>
-    [[pass]]
-    <tbody>
-    </tbody>
-  </table>
+  [[pass]]
 </div>

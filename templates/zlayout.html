@@ -50,14 +50,14 @@
   
   <!-- Main 2-column page -->
   <div class="container-fluid vh-100 d-flex flex-column">
+    [[block channel_header]]
     <div class="row zforum-header flex-shrink-0">
       <div class="col border zforum-h-150">
-          [[block channel_header]]
           <h3><div class="m-2 p-2">~/c/zForum</div></h3>
           [[if 'channel_desc' in globals():]]<p>[[=XML(channel_desc)]]</p>[[pass]]
-          [[end]]
       </div>
     </div>
+    [[end]]
     <div class="row flex-grow-1" style="min-height:0">
       <div class="col-sm-9 p-3 border border-secondary border-end-0 border-top-0 bg-light-subtle m-0 h-100 d-flex flex-column" style="overflow-y: scroll;">
         <!-- Main Content -->
