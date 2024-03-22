@@ -51,9 +51,12 @@ def new_channel():
             tag = req.get('tag', '').strip()
             title = req.get('title', '')
             content = req.get('content', '')
-            # TODO Handle image in FS
             # <ombott.request_pkg.helpers.FileUpload object at 0x107ecfc40>
-            banner = request.get('channel-img', '')
+            channel_banner = request.files.get('channel-img', None)
+            if not fh.verify_channel_banner(channel_banner):
+                errors.append(
+                    'Unable to upload the banner for this channel. '
+                    'Only valid image files are allowed.')
             # Checkboxes with uncheck state will not be available in
             # request.forms, otherwise it will contain the identifier 'on'
             is_public = req.get('is-public', False) and True
@@ -62,7 +65,7 @@ def new_channel():
                 'tag': tag,
                 'title': title,
                 'content': content,
-                'banner': banner,
+                'banner': channel_banner,
                 'is_public': is_public
             }
             if not title:
@@ -81,6 +84,9 @@ def new_channel():
                     if tag_exists:
                         errors.append('Tag already exists.')
             if not errors:
+                # Store image if available
+                if channel_banner is not None:
+                    fh.store_channel_banner(channel_banner)
                 # Create Channel!
                 db.channel.insert(
                     tag=tag,

@@ -40,6 +40,18 @@ class ForumHelper:
             'fname': fname
         }
 
+    def verify_channel_banner(self, payload):
+        """ Receives a payload (or None) and verifies it is a valid
+            image to use """
+        if payload is not None:
+            # payload is in instance of
+            # <ombott.request_pkg.helpers.FileUpload object at 0x107ecfc40>
+            content_type = payload.content_type
+        return True
+
+    def store_channel_banner(self, payload):
+        """ receives a valid payload and creates a filesystem file """
+
     def is_sysadmin(self, user_id=None):
         """ Returns true if the user is in the Managers group,
         (See common.py for the definition of the groups table)
