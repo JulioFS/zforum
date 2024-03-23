@@ -4,7 +4,7 @@
 <div class="row [[if not channel_info['banner']:]]zforum-header[[pass]] flex-shrink-0"
 [[if channel_info['banner']:]]style="background-size:cover;background-repeat:no-repeat;background-image:url('[[=channel_info['banner']]]');"[[pass]]>
   <div class="col border zforum-h-150">
-    <h3><div class="m-2 p-2">~/c/[[=channel_info['tag']]]</div></h3>
+    <h3><div class="m-2 p-2">/c/[[=channel_info['tag']]]</div></h3>
     <p>[[=XML(channel_info['title'])]]</p>
   </div>
 </div>

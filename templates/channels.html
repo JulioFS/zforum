@@ -1,13 +1,13 @@
 [[extend 'zlayout.html']]
 
-<div class="container">
+<div class="container px-0">
   [[for c in channels:]]
-  <div class="card">
-    <h5 class="card-header">~/c/Blah</h5>
+  <div class="card mb-1">
+    <h5 class="card-header"><a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+      href="[[=URL(f'c/{c.tag}')]]">/c/[[=c.tag]]</a></h5>
     <div class="card-body">
-      <h5 class="card-title">Special title treatment</h5>
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
+      <h5 class="card-title">[[=c.title]]</h5>
+      <p class="card-text">[[=c.content]]</p>
     </div>
   </div>
   [[pass]]

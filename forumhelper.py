@@ -43,11 +43,14 @@ class ForumHelper:
     def verify_channel_banner(self, payload):
         """ Receives a payload (or None) and verifies it is a valid
             image to use """
-        if payload is not None:
+        # Move to System Setings?
+        available_content_types = ['image/jpeg', 'image/png']
+        if payload is not None and \
+            payload.content_type in available_content_types:
             # payload is in instance of
             # <ombott.request_pkg.helpers.FileUpload object at 0x107ecfc40>
-            content_type = payload.content_type
-        return True
+            return True
+        return False
 
     def store_channel_banner(self, payload):
         """ receives a valid payload and creates a filesystem file """

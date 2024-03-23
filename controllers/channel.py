@@ -51,12 +51,17 @@ def new_channel():
             tag = req.get('tag', '').strip()
             title = req.get('title', '')
             content = req.get('content', '')
+            f_size = int(req.get('fSize', 0))
             # <ombott.request_pkg.helpers.FileUpload object at 0x107ecfc40>
             channel_banner = request.files.get('channel-img', None)
-            if not fh.verify_channel_banner(channel_banner):
-                errors.append(
-                    'Unable to upload the banner for this channel. '
-                    'Only valid image files are allowed.')
+            if channel_banner is not None:
+                if f_size > 1500000:
+                    errors.append('Upload banner too large, reduce the size'
+                                  'and try again.')
+                elif not fh.verify_channel_banner(channel_banner):
+                    errors.append(
+                        'Unable to upload the banner for this channel. '
+                        'Only valid image files are allowed.')
             # Checkboxes with uncheck state will not be available in
             # request.forms, otherwise it will contain the identifier 'on'
             is_public = req.get('is-public', False) and True
@@ -142,4 +147,7 @@ def channels():
     # Ok, before we get all fancy, let's return a basic list of channels
     # c/xyz | This is the channel title | 100 Topics | 200 comments
     all_channels = db().select(db.channel.ALL, orderby=db.channel.modified_on)
-    return {'channels': all_channels}
+    return {
+        'channels': all_channels,
+        'channel_desc': 'Available Channels.'
+    }
