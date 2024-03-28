@@ -89,18 +89,21 @@ def new_channel():
                     if tag_exists:
                         errors.append('Tag already exists.')
             if not errors:
-                # Store image if available
-                if channel_banner is not None:
-                    fh.store_channel_banner(channel_banner)
                 # Create Channel!
-                db.channel.insert(
+                channel_id = db.channel.insert(
                     tag=tag,
                     title=title,
                     content=content,
                     created_by=user['id'],
                     modified_by=user['id'],
                     owner_id=user['id'],
+                    banner=channel_banner.filename,
                     is_public=is_public)
+                # Store image if available
+                if channel_banner is not None:
+                    fh.store_channel_banner(channel_id, channel_banner)
+                # Make the logged in user the channel admin by default
+                fh.grant_channel_admin(channel_id, user['id'])
                 return redirect(URL(f'c/{tag}', vars={'new': 'true'}))
         else:
             return redirect(URL('index'))
@@ -112,15 +115,17 @@ def new_channel():
 def channel_index(tag):
     """ Main Index for a channel """
     # Does it exist
-    tag_record = db(db.channel.tag == tag).select(db.channel.ALL)
-    if tag_record:
+    z_channel = db(db.channel.tag == tag).select(db.channel.ALL).first()
+    if z_channel:
         # TODO Handle considerations for private channels
-        is_public = tag_record[0].is_public
+        is_public = z_channel.is_public
+        channel_banner = fh.retrieve_channel_banner(
+            z_channel.id, z_channel.banner)
         channel_info = {
-            'tag': tag_record[0].tag,
-            'title': tag_record[0].title,
-            'content': tag_record[0].content,
-            'banner': tag_record[0].banner,
+            'tag': z_channel.tag,
+            'title': z_channel.title,
+            'content': z_channel.content,
+            'banner': channel_banner,
             'is_public': is_public
         }
         payload = {'tag': tag, 'channel_info': channel_info}

@@ -5,6 +5,8 @@ import hashlib
 import uuid
 import os
 from markdown import markdown
+from py4web import URL
+from .settings import Z_EXTERNAL_IMAGES, Z_INTERNAL_IMAGES
 from .common import db, groups, auth
 
 # Use imghdr (imghdr.what(fname[,stream])) to find out image type
@@ -30,6 +32,23 @@ class ForumHelper:
             str(uuid.uuid4()).encode('utf-8') +
             fname.encode('utf-8')).hexdigest()
 
+    def grant_channel_admin(self, channel_id, user_id):
+        """ Given a channel id and user id, upsert a record in
+        channel admin table with is_active=True """
+        db.channel_admin.update_or_insert(
+            user_id=user_id, channel_id=channel_id, is_active=True)
+        
+    def revoke_channel_admin(self, channel_id, user_id):
+        """ Given a channel id and user id, upsert a record in
+        channel admin table with is_active=False """
+        db.channel_admin.update_or_insert(
+            user_id=user_id, channel_id=channel_id, is_active=False)
+        
+    def is_channel_admin(self, channel_id, user_id):
+        """ True if user is channel admin, false otherwise """
+        return db(db.channel_admin.user_id==user_id &
+               db.channel_admin.channel_id==channel_id &
+               db.channel_admin.is_active==True).count() > 0
 
     def generate_file_location(self, fname):
         """ Generates a path location where to store a file """
@@ -52,8 +71,26 @@ class ForumHelper:
             return True
         return False
 
-    def store_channel_banner(self, payload):
+    def retrieve_channel_banner(self, channel_id, banner_name):
+        """ Given a channel id, retrieve the banner for it or None """
+        if banner_name:
+            img_path = os.path.join(
+                Z_EXTERNAL_IMAGES, 'channels', str(channel_id), banner_name)
+            if os.path.isfile(img_path):
+                return URL(
+                    'static', Z_INTERNAL_IMAGES, 'channels',
+                    str(channel_id), banner_name)
+        return None
+
+    def store_channel_banner(self, channel_id, payload):
         """ receives a valid payload and creates a filesystem file """
+        # <ombott.request_pkg.helpers.FileUpload object at 0x107ecfc40>
+        os.makedirs(os.path.join(Z_EXTERNAL_IMAGES, 'channels',
+                                 str(channel_id)), exist_ok=True)
+        fn = os.path.join(Z_EXTERNAL_IMAGES, 'channels', str(channel_id),
+                          payload.filename)
+        payload.save(fn, overwrite=True)
+
 
     def is_sysadmin(self, user_id=None):
         """ Returns true if the user is in the Managers group,

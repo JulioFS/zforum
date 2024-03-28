@@ -89,6 +89,13 @@ OAUTH2GITHUB_CLIENT_SECRET = None
 # i18n settings
 T_FOLDER = required_folder(APP_FOLDER, "translations")
 
+# Location of external images such as topic, posts, user images
+Z_EXTERNAL_IMAGES = '/home/julio/CodeRepo/py4web/apps/zforum/static/.ext_images'
+# Internal Images is a symlink to Z_EXTERNAL_IMAGES insode static so
+# it can be used inside the context of http, use it like:
+# URL('static', Z_INTERNAL_IMAGES, 'channels', channel_name, etc)
+Z_INTERNAL_IMAGES = '.ext_images'
+
 # try import private settings
 try:
     from .settings_private import *
