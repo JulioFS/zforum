@@ -19,7 +19,7 @@ DB_URI = 'override-in-settings-private'
 DB_POOL_SIZE = 1
 # fake migrate true tells py4web you have the tables in db but you#
 # deleted the metadata.
-DB_MIGRATE = False # True if DB does not exist (or rebuilding) else False
+DB_MIGRATE = True # True if DB does not exist AT ALL (no *.table files) (or rebuilding) else False
 DB_FAKE_MIGRATE = False  # True if rebuilding metadata else False
 
 # location where static files are stored:
@@ -90,7 +90,7 @@ OAUTH2GITHUB_CLIENT_SECRET = None
 T_FOLDER = required_folder(APP_FOLDER, "translations")
 
 # Location of external images such as topic, posts, user images
-Z_EXTERNAL_IMAGES = '/home/julio/CodeRepo/py4web/apps/zforum/static/.ext_images'
+Z_EXTERNAL_IMAGES = '/Users/julio/CodeRepo/py4web/apps/zforum/static/.ext_images'
 # Internal Images is a symlink to Z_EXTERNAL_IMAGES insode static so
 # it can be used inside the context of http, use it like:
 # URL('static', Z_INTERNAL_IMAGES, 'channels', channel_name, etc)

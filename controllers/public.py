@@ -34,14 +34,14 @@ from ..forumhelper import forumhelper as fh
 
 
 @action('index')
-@action.uses('index.html', auth, db, T)
+@action.uses('index.html', auth, db, session, T)
 def index():
     """ /index entry point """
     #groups.add(1, 'manager')
-    user = auth.get_user()
+    #user = auth.get_user()
     channel_desc = fh.get_system_property('zfss_header_html', '')
-    is_admin = fh.is_sysadmin()
-    payload = {'channel_desc': channel_desc, 'is_admin': is_admin, 'usr': user}
+    is_systemadmin = fh.is_sysadmin()
+    payload = {'channel_desc': channel_desc, 'is_systemadmin': is_systemadmin}
     return payload
 
 @action('ex/<err>')
