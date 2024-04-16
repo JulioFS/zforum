@@ -47,7 +47,6 @@ def new_channel():
     if form_submitted:
         req = request.forms
         if 'create-button' in req:
-            user = auth.get_user()
             tag = req.get('tag', '').strip()
             title = req.get('title', '')
             content = req.get('content', '')
@@ -110,6 +109,7 @@ def new_channel():
 
     return {'errors': errors, 'payload': payload}
 
+# View a specific Channel
 @action('c/<tag>')
 @action.uses('channel_index.html', auth, T)
 def channel_index(tag):
@@ -117,6 +117,10 @@ def channel_index(tag):
     # Does it exist
     z_channel = db(db.channel.tag == tag).select(db.channel.ALL).first()
     if z_channel:
+        user = auth.get_user()
+        if user is not None:
+            can_admin_channel = fh.is_channel_admin(
+                user['id'], z_channel.id) or fh.is_sysadmin(user['id'])
         # TODO Handle considerations for private channels
         is_public = z_channel.is_public
         channel_banner = fh.retrieve_channel_banner(
@@ -126,7 +130,8 @@ def channel_index(tag):
             'title': z_channel.title,
             'content': z_channel.content,
             'banner': channel_banner,
-            'is_public': is_public
+            'is_public': is_public,
+            'can_admin_channel': can_admin_channel
         }
         payload = {'tag': tag, 'channel_info': channel_info}
         return payload

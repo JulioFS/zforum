@@ -10,7 +10,16 @@
 </div>
 [[end]]
 
+[[block page_sidebar]]
+  <a class="btn btn-primary" href="[[=URL('new_topic')]]" role="button">New Topic</a>
+  [[if globals().get('channel_info', {}).get('can_admin_channel', False):]]
+      <a class="btn btn-primary" href="[[=URL('channel_admin')]]" role="button">Manage Channel</a>
+  [[pass]]
+[[end]]
+
 [[block subnav_lead]]
 <h3 class="fs-2 text-body-emphasis">[[=channel_info['tag']]]</h3>
 <p>[[=XML(channel_info['content'])]]</p>
 [[end]]
+
+<h2>Hello World</h2>

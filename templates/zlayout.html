@@ -127,7 +127,7 @@
         <p>You've reached the main zForum channel, you are free to create your own channel
           or browse through the existing channels and topics. Topics shown on this
           page are those ranked higher by the community, however you may sort by newest
-          instead if you wish
+          instead if you wish.
         </p>
         <a href="[[=URL('channels')]]" class="icon-link">
           View All Channels
@@ -138,15 +138,11 @@
         [[end]]
   
         <div class="d-grid gap-2 mt-4">
-          [[if globals().get('user'):]]
-            <a class="btn btn-primary" href="[[=URL('new_channel')]]" role="button">New Channel</a>
-            <a class="btn btn-primary" href="[[=URL('new_topic')]]" role="button">New Topic</a>
-            <!--
-            <a class="btn btn-primary" href="[[=URL('zauth/profile')]]" role="button">My Profile</a>
-            <a class="btn btn-primary" href="[[=URL('auth/logout')]]" role="button">Log Out</a>
-            <a class="btn btn-primary" href="[[=URL('zauth/login')]]" role="button">Log In</a>
-            <a class="btn btn-primary" href="[[=URL('zauth/register')]]" role="button">Sign Up</a> //-->
-          [[pass]]
+          [[block page_sidebar]]
+            [[if globals().get('user'):]]
+              <a class="btn btn-primary" href="[[=URL('new_channel')]]" role="button">New Channel</a>
+            [[pass]]
+          [[end]]
         </div>
   
       </div>

@@ -109,9 +109,9 @@ class ForumHelper:
         any user administrative rights to any channel they control.
         """
         return db(
-            db.channel_admin.channel_id==channel_id &
-            db.channel_admin.is_active &
-            db.channel_admin.user_id==user_id).count() > 0
+            (db.channel_admin.channel_id==channel_id) &
+            (db.channel_admin.is_active) &
+            (db.channel_admin.user_id==user_id)).count() > 0
 
     def get_user_properties(self, user_id=None):
         """ Returns a list of properties (ordered by Property Name)
