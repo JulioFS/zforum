@@ -2,13 +2,14 @@
 
 <div class="container-fluid px-0">
   [[for c in channels:]]
-  <div class="card mb-1">
+  <div class="card mb-2">
     <h5 class="card-header"><a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
       href="[[=URL(f'c/{c.tag}')]]">/c/[[=c.tag]]</a></h5>
     <div class="card-body">
       <h5 class="card-title">[[=c.title]]</h5>
       <p class="card-text">[[=c.content]]</p>
     </div>
+    <div class="card-footer text-muted">100 Posts, 5,000 Comments</div>
   </div>
   [[pass]]
 </div>

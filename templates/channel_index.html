@@ -11,9 +11,11 @@
 [[end]]
 
 [[block page_sidebar]]
-  <a class="btn btn-primary" href="[[=URL('new_topic')]]" role="button">New Topic</a>
+  [[if globals().get('user', {}).get('id', False):]]
+    <a class="btn btn-primary" href="[[=URL('new_topic')]]" role="button">New Topic</a>
+  [[pass]]
   [[if globals().get('channel_info', {}).get('can_admin_channel', False):]]
-      <a class="btn btn-primary" href="[[=URL('channel_admin')]]" role="button">Manage Channel</a>
+    <a class="btn btn-primary" href="[[=URL('channel_admin')]]" role="button">Manage Channel</a>
   [[pass]]
 [[end]]
 

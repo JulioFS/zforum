@@ -78,6 +78,8 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               [[if globals().get('user'):]]
+              <li><a class="dropdown-item" disabled>[[=globals().get('user').get('email')]]</a></li>
+              <li><hr class="dropdown-divider" /></li>
               <!-- If system detects user already logged in, allow profile: -->
               <li><a class="dropdown-item" href="[[=URL('zauth/profile')]]">My Profile</a></li>
               [[if 'change_password' in globals().get('actions', {}).get('allowed_actions', {}):]]

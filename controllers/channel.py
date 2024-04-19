@@ -39,7 +39,6 @@ from ..forumhelper import forumhelper as fh
 def new_channel():
     """ /index entry point """
     errors = []
-    payload = {}
     user = auth.get_user()
     if user is None:
         redirect(URL('exception'))
@@ -47,7 +46,8 @@ def new_channel():
     if form_submitted:
         req = request.forms
         if 'create-button' in req:
-            tag = req.get('tag', '').strip()
+            # Channels (tags) will all be lowercase
+            tag = req.get('tag', '').strip().lower()
             title = req.get('title', '')
             content = req.get('content', '')
             f_size = int(req.get('fSize', 0))
@@ -64,14 +64,6 @@ def new_channel():
             # Checkboxes with uncheck state will not be available in
             # request.forms, otherwise it will contain the identifier 'on'
             is_public = req.get('is-public', False) and True
-            payload = {
-                'user': user,
-                'tag': tag,
-                'title': title,
-                'content': content,
-                'banner': channel_banner,
-                'is_public': is_public
-            }
             if not title:
                 errors.append('Title is required.')
             if not content:
@@ -89,6 +81,9 @@ def new_channel():
                         errors.append('Tag already exists.')
             if not errors:
                 # Create Channel!
+                banner = None
+                if channel_banner is not None:
+                    banner = channel_banner.filename
                 channel_id = db.channel.insert(
                     tag=tag,
                     title=title,
@@ -96,7 +91,7 @@ def new_channel():
                     created_by=user['id'],
                     modified_by=user['id'],
                     owner_id=user['id'],
-                    banner=channel_banner.filename,
+                    banner=banner,
                     is_public=is_public)
                 # Store image if available
                 if channel_banner is not None:
@@ -107,7 +102,7 @@ def new_channel():
         else:
             return redirect(URL('index'))
 
-    return {'errors': errors, 'payload': payload}
+    return {'errors': errors}
 
 # View a specific Channel
 @action('c/<tag>')
@@ -118,7 +113,8 @@ def channel_index(tag):
     z_channel = db(db.channel.tag == tag).select(db.channel.ALL).first()
     if z_channel:
         user = auth.get_user()
-        if user is not None:
+        can_admin_channel = False
+        if 'id' in user:
             can_admin_channel = fh.is_channel_admin(
                 user['id'], z_channel.id) or fh.is_sysadmin(user['id'])
         # TODO Handle considerations for private channels
