@@ -1,8 +1,7 @@
 /* Inter Font by Rasmus Andersson */
 body {
   font-family: 'Inter', sans-serif !important;
-  /*min-height: 75rem;*/
-  padding-top: 3.5rem;
+  /*padding-top: 3.5rem; (for fixed-top) */
 }
 
 html {

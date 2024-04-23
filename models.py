@@ -354,3 +354,59 @@ if db(db.rank).isempty():
     ]
     db.rank.bulk_insert(ranks)
     db.commit()
+
+if db(db.member_setting_template).isempty():
+    settings = [
+        {
+            'name': 'zfmp_display_name',
+            'description': 'Display/screen name (call-sign, handle, etc.)',
+            'is_readonly': False
+        },
+        {
+            'name': 'zfmp_bio',
+            'description': 'About self (text only)',
+            'is_readonly': False
+        },
+        {
+            'name': 'zfmp_allow_pm',
+            'description': 'Allow to be contacted by other members',
+            'is_readonly': False
+        },
+        {
+            'name': 'zfmp_sig',
+            'description': 'Append this at the end of posts/comments',
+            'is_readonly': False
+        },
+        {
+            'name': 'zfmp_url',
+            'description': 'Personal/business, social media website',
+            'is_readonly': False
+        },
+        {
+            'name': 'zfmp_last_login',
+            'description': 'User last login date',
+            'is_readonly': True
+        },
+        {
+            'name': 'zfmp_last_login_ip',
+            'description': 'User last login IP',
+            'is_readonly': True
+        },
+        {
+            'name': 'zfmp_posts',
+            'description': 'Number of posts',
+            'is_readonly': True
+        },
+        {
+            'name': 'zfmp_replies',
+            'description': 'Number of replies',
+            'is_readonly': True
+        },
+        {
+            'name': 'zfmp_joined',
+            'description': 'Date joined',
+            'is_readonly': True
+        }
+    ]
+    db.member_setting_template.bulk_insert(settings)
+    db.commit()

@@ -41,7 +41,11 @@ def index():
     #user = auth.get_user()
     channel_desc = fh.get_system_property('zfss_header_html', '')
     is_systemadmin = fh.is_sysadmin()
-    payload = {'channel_desc': channel_desc, 'is_systemadmin': is_systemadmin}
+    payload = {
+        'channel_desc': channel_desc,
+        'is_systemadmin': is_systemadmin,
+        'vergonio': 'YES'
+    }
     return payload
 
 @action('ex/<err>')

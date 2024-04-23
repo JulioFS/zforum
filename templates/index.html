@@ -1,9 +1,9 @@
 [[extend 'zlayout.html']]
 
-<p>Vergonio</p>
+<p>Vergonio: [[if 'vergonio' in globals():]][[=vergonio]][[else:]]No Vergonio[[pass]]</p>
 <p>Is Admin: [[=is_systemadmin]]</p>
-<p>[[=user]]
-<p>[[=globals().keys()]]</p>
+<p>[[=user]]</p>
+<p>[[=globals()]]</p>
 
 <!-- Add a block subnav_lead to override information -->
 

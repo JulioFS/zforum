@@ -25,7 +25,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-md navbar-light fixed-top bg-dark">
+  <nav class="navbar navbar-expand-md navbar-light bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="[[=URL('index')]]">zForum<span class="fs-6">.org</span></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -101,25 +101,30 @@
   </nav>
 
   
-  <!-- Main 2-column page -->
-  <div class="container-fluid vh-100 d-flex flex-column">
+  <!-- Main Content Container  -->
+  <div class="container-fluid d-flex flex-column">
+
+    <!-- Main header (spanning the entire width) -->
     [[block channel_header]]
     <div class="row zforum-header flex-shrink-0">
-      <div class="col border zforum-h-150">
+      <div class="col zforum-h-150">
           <h3><div class="m-2 p-2">/c/zForum</div></h3>
           [[if 'channel_desc' in globals():]]<p>[[=XML(channel_desc)]]</p>[[pass]]
       </div>
     </div>
     [[end]]
-    <div class="row flex-grow-1" style="min-height:0">
-      <div class="col-sm-9 p-3 border border-secondary border-end-0 border-top-0 bg-light-subtle m-0 h-100 d-flex flex-column"
-        style="overflow-y: hidden;">
+
+    <!-- "Two-Column" Layout -->
+    <div class="row flex-grow-1 vh-100">
+
+      <!-- First "column", main content -->
+      <div class="col-sm-9 p-3 h-100 d-flex flex-column bg-dark">
         <!-- Main Content -->
         [[include]]
       </div>
   
-      <!-- Right Nav - Move to own block [?] -->
-      <div class="col-sm-3 feature p-3 bg-dark border border-secondary border-top-0 m-0 mh-100 d-flex flex-column">
+      <!--Second Column (Right Nav) - Move it to own block [???] -->
+      <div class="col-sm-3 feature p-3 bg-dark m-0 mh-100 d-flex flex-column">
   
         [[block subnav_lead]]
         <div class="feature-icon d-inline-flex align-items-start justify-content-start fs-2 mb-3">

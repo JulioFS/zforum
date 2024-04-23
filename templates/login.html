@@ -15,7 +15,7 @@
 [[pass]]
 
 <form method="post" enctype="multipart/form-data" action="[[=URL('zauth/login')]]">
-  <div class="container my-4">
+  <div class="container my-3">
 
     <div class="d-flex justify-content-center">
       <div class="card">
@@ -34,15 +34,17 @@
             </div>
 
             <p>Additional Login Providers:
-              <a href="[[=URL('auth/plugin/oauth2google/login')]]" title="Google Login ">Log In with Google</a>
+              <a href="[[=URL('auth/plugin/oauth2google/login')]]" title="Google Login "><i class="fa-brands fa-google"></i> - Log In with Google</a>
             </p>
 
-            <div class="mb-0 d-grid gap-2 d-md-flex justify-content-md-end">
+            <div class="my-2 d-grid gap-2 d-md-flex justify-content-md-end">
               <button class="btn btn-primary" type="submit" name="submit">Log In</button>
               <button class="btn btn-primary" type="submit" name="cancel">Cancel</button>
             </div>
-            <div class="mb-1"><a href="[[=URL('zauth/request_reset_password')]]" title="Password Recovery">Forgot
-                Password?</a></div>
+            <div class="mb-1">
+              <a href="[[=URL('zauth/request_reset_password')]]" title="Password Recovery">Forgot Password?</a> |
+              <a href="[[=URL('zauth/register')]]" title="Sign Up">New Account?</a>
+            </div>
           </p>
         </div>
       </div>
