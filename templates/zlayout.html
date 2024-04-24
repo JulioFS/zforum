@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-mdb-theme="dark">
+<html lang="en" data-bs-theme="dark">
 
 <head>
   <base href="[[=URL('static')]]/">
@@ -16,16 +16,17 @@
     href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
     rel="stylesheet"
   />
-  <!-- MDB -->
+  <!-- Bootstrap -->
   <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
     rel="stylesheet"
   />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="[[=URL('static', 'css/zforum.css')]]" rel="stylesheet">
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-md navbar-light bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-light bg-dark">
     <div class="container-fluid">
       <a class="navbar-brand" href="[[=URL('index')]]">zForum<span class="fs-6">.org</span></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -51,51 +52,38 @@
           </li>
         </ul>
         <form class="d-flex input-group w-auto">
-          <input
-            type="search"
-            class="form-control rounded"
-            placeholder="Search"
-            aria-label="Search"
-            aria-describedby="search-addon"
-          />
+          <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+            aria-describedby="search-addon" />
           <span class="input-group-text border-0" id="search-addon">
             <i class="fas fa-search"></i>
           </span>
         </form>
-        <ul class="navbar-nav">
-          <!-- Avatar -->
-          <li class="nav-item dropdown">
-            <a
-              data-mdb-dropdown-init
-              class="nav-link dropdown-toggle d-flex align-items-center"
-              href="#"
-              id="navbarDropdownMenuLink"
-              role="button"
-              aria-expanded="false"
-            >
-
-              <i class="fa-solid fa-circle-user"></i>
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              [[if globals().get('user'):]]
-              <li><a class="dropdown-item" disabled>[[=globals().get('user').get('email')]]</a></li>
-              <li><hr class="dropdown-divider" /></li>
-              <!-- If system detects user already logged in, allow profile: -->
-              <li><a class="dropdown-item" href="[[=URL('zauth/profile')]]">My Profile</a></li>
-              [[if 'change_password' in globals().get('actions', {}).get('allowed_actions', {}):]]
-              <li><a class="dropdown-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
-              [[pass]]
-              [[if globals().get('is_systemadmin', False):]]
-              <li><a class="dropdown-item" href="#">System Admin</a></li>
-              [[pass]]
-              <li><a class="dropdown-item" href="[[=URL('auth/logout')]]">Logout</a></li>
-              [[else:]]
-              <li><a class="dropdown-item" href="[[=URL('zauth/login')]]">Log In</a></li>
-              <li><a class="dropdown-item" href="[[=URL('zauth/register')]]">New Account</a></li>
-              [[pass]]
-            </ul>
-          </li>
-        </ul>
+        <div class="dropdown dropstart">
+          <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" href="#"
+            id="navbarDropdownMenuLink" role="button" aria-expanded="false">
+            <i class="bi bi-person-circle"></i>
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            [[if globals().get('user'):]]
+            <li><a class="dropdown-item" disabled>[[=globals().get('user').get('email')]]</a></li>
+            <li>
+              <hr class="dropdown-divider" />
+            </li>
+            <!-- If system detects user already logged in, allow profile: -->
+            <li><a class="dropdown-item" href="[[=URL('zauth/profile')]]">My Profile</a></li>
+            [[if 'change_password' in globals().get('actions', {}).get('allowed_actions', {}):]]
+            <li><a class="dropdown-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
+            [[pass]]
+            [[if globals().get('is_systemadmin', False):]]
+            <li><a class="dropdown-item" href="#">System Admin</a></li>
+            [[pass]]
+            <li><a class="dropdown-item" href="[[=URL('auth/logout')]]">Logout</a></li>
+            [[else:]]
+            <li><a class="dropdown-item" href="[[=URL('zauth/login')]]">Log In</a></li>
+            <li><a class="dropdown-item" href="[[=URL('zauth/register')]]">New Account</a></li>
+            [[pass]]
+          </ul>
+        </div>
       </div>
     </div>
   </nav>
@@ -156,11 +144,9 @@
     </div>
   </div>
 
-  <!-- MDB -->
-  <script
-    type="text/javascript"
-    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.umd.min.js"
-  ></script>
+  <!-- Bootstrap -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- alt to moment.js -->
   <script src="[[=URL('static', 'js/luxon.min.js')]]"></script>
   [[block page_scripts]]<!-- individual pages can add scripts here -->[[end]]
 </body>

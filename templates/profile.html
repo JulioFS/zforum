@@ -1,0 +1,57 @@
+[[extend 'zlayout.html']]
+
+[[if errors:]]
+<div class="container pt-3">
+  <div class="alert alert-warning" role="alert">
+    [[=errors]]
+  </div>
+</div>
+[[pass]]
+
+<div class="container-fluid px-0">
+  <h3>User Profile</h3>
+  <hr>
+  <form method="post" action="[[=URL('zauth/profile')]]" enctype="multipart/form-data">
+    <!-- Sections:
+      - Member Properties
+      - Password change
+      - Channels for which you are an admin (links)
+    //-->
+
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-main-tab" data-bs-toggle="tab" data-bs-target="#nav-main" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Main Settings</button>
+        <button class="nav-link" id="nav-passwd-tab" data-bs-toggle="tab" data-bs-target="#nav-passwd" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Change Password</button>
+        <button class="nav-link" id="nav-admin-tab" data-bs-toggle="tab" data-bs-target="#nav-admin" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Admin Channels</button>
+      </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+      <div class="tab-pane fade show active" id="nav-main" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+        <!-- Main Form Here -->
+        <p class="mt-4">Below is a list of all the available fields that are personal
+          to your account.
+        </p>
+        <hr>
+        [[=available_questions]]
+      </div>
+      <div class="tab-pane fade" id="nav-passwd" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+        <!-- Password Change Form Here -->
+        <p class="mt-4">In order to change your password, please first type your current password, then enter
+          the new password, and confirmation. If you logged in through any of the available login providers,
+          and wish to set up a <i>local</i> password for your account, please select the "Forgot Password"
+          option instead.
+        </p>
+        <hr>
+      </div>
+      <div class="tab-pane fade" id="nav-admin" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
+        <p class="mt-4">Channels available for administration</p>
+        <!-- List of channels which you are admin here -->
+        [[if 'admin_channels' in globals() and len(admin_channels) > 0:]]
+        <p>Admin Channels Found.</p>
+        [[else:]]
+        <p><i>No channels for which you are an administrator were found.</i></p>
+        [[pass]]
+      </div>
+    </div>
+  </form>
+</div>

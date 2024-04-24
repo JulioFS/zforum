@@ -108,7 +108,7 @@ def auth_regisrer():
 
     if (req.method == 'GET' or len(errors) > 0) and not is_cancel:
         return {'error': error, 'errors': errors, 'form_fields': payload}
-    return redirect(URL('index', vars={'action': 'reg'}))
+    return redirect(URL('index', vars={'action': '' if is_cancel else 'reg'}))
 
 @action('zauth/request_reset_password', method=['get', 'post'])
 @action.uses('reset.html', auth)
@@ -132,16 +132,40 @@ def auth_request_reset_password():
         return {'error': error}
     return redirect(URL('index', vars={'action': 'rrp'}))
 
+@action('zauth/profile/<user_id>', method=['get', 'post'])
 @action('zauth/profile', method=['get', 'post'])
-@action.uses('profile.html')
-def profile():
+@action.uses('profile.html', auth, db, session, T)
+def profile(user_id=None):
     """ Main user profile, not entirely similar to OOB """
     req = request
     errors = []
-    payload = {}
     user = auth.get_user()
     if user is None:
         redirect(URL('ex/unauthorized'))
+    
+    # If user is authorized, and a user_id user is passed in,
+    # the user will be able to edit the passed in user ONLY
+    # if the logged in user is an admin..
+    is_admin = fh.is_sysadmin()
+    valid_user_id = user.get('id')
+    available_questions = {}
+    if is_admin and user_id is not None:
+        valid_user_id = user_id
+    rows = db().select(
+        db.member_setting_template.ALL,
+        db.member_setting.ALL,
+        left=db.member_setting.on(
+            (db.member_setting_template.id==db.member_setting.template_id) & \
+                (db.member_setting.user_id==valid_user_id)))
+    for row in rows:
+        available_questions[row.member_setting_template.id] = {
+            'template_name': row.member_setting_template.name,
+            'description': row.member_setting_template.description,
+            'can_update': not row.member_setting_template.is_readonly or \
+                is_admin,
+            'user_value': row.member_setting.value
+        }
     if req.method == 'POST':
+        # TODO Add logic
         x=1
-    return {'errors': errors}
+    return {'errors': errors, 'available_questions': available_questions}
