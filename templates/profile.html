@@ -11,7 +11,7 @@
 <div class="container-fluid px-0">
   <h3>User Profile</h3>
   <hr>
-  <form method="post" action="[[=URL('zauth/profile')]]" enctype="multipart/form-data">
+  <form method="post" action="[[=URL(f'zauth/profile/{user.get("id")}')]]" enctype="multipart/form-data">
     <!-- Sections:
       - Member Properties
       - Password change
@@ -25,29 +25,81 @@
         <button class="nav-link" id="nav-admin-tab" data-bs-toggle="tab" data-bs-target="#nav-admin" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Admin Channels</button>
       </div>
     </nav>
-    <div class="tab-content" id="nav-tabContent">
+    <div class="tab-content mb-4" id="nav-tabContent">
       <div class="tab-pane fade show active" id="nav-main" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
         <!-- Main Form Here -->
-        <p class="mt-4">Below is a list of all the available fields that are personal
-          to your account.
+        <p class="mt-4 text-muted">Below is a list of all the available fields that are personal
+          to your account. Some fields may not be editable if you are not an administrator.
         </p>
-        <hr>
-        [[=available_questions]]
+        <hr class="mb-4">
+        [[for template_id, flds in available_questions.items():]]
+        <div class="mb-3">
+          <label for="[[=flds['template_name'] ]]" class="form-label">[[=flds['description'] ]]: </label>
+          [[if flds['form_type'] == 'check':]]
+          <input type="checkbox" class="form-check-input" id="[[=flds['template_name'] ]]"
+            data-template-id="[[=template_id]]" [[if flds['restricted']:]]disabled[[pass]]>
+          [[elif flds['form_type'] == 'text':]]
+          <textarea class="form-control" id="[[=flds['template_name'] ]]"
+            data-template-id="[[=template_id]]"
+            [[if flds['restricted']:]]disabled[[pass]]
+            rows="5">[[=request.forms.get(flds['template_name'], flds['user_value'])]]</textarea>
+          [[else:]]
+          <input type="text" class="form-control" id="[[=flds['template_name'] ]]"
+            name="[[=flds['template_name'] ]]"
+            data-template-id="[[=template_id]]"
+            [[if flds['restricted']:]]disabled[[pass]]
+            value="[[=request.forms.get(flds['template_name'], flds['user_value'])]]">
+          [[pass]]
+        </div>
+        [[pass]]
+        <button type="submit" class="btn btn-primary" id="submit-settings" name="submit-settings">Submit</button>
       </div>
       <div class="tab-pane fade" id="nav-passwd" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
         <!-- Password Change Form Here -->
-        <p class="mt-4">In order to change your password, please first type your current password, then enter
+        <p class="mt-4 text-muted">In order to change your password, please first type your current password, then enter
           the new password, and confirmation. If you logged in through any of the available login providers,
           and wish to set up a <i>local</i> password for your account, please select the "Forgot Password"
           option instead.
         </p>
-        <hr>
+        <hr class="mb-4">
+        <div class="mb-3">
+          <label for="cur-passwd" class="form-label">Current Password:</label>
+          <input type="password" class="form-control" id="cur-passwd" name="cur-passwd">
+        </div>
+        <div class="mb-3">
+          <label for="new-passwd" class="form-label">New Password:</label>
+          <input type="password" class="form-control" id="new-passwd" name="new-passwd">
+        </div>
+        <div class="mb-3">
+          <label for="new-passwd-c" class="form-label">New Password (Confirm):</label>
+          <input type="password" class="form-control" id="new-passwd-c" name="new-passwd-c">
+        </div>
+        <p>Don't Remember Password?
+          <a href="[[=URL('zauth/request_reset_password')]]" title="Request Reset Password">Request Password Reset</a></p>
+        <button type="submit" class="btn btn-primary" id="submit-settings" name="submit-settings">Submit</button>
       </div>
       <div class="tab-pane fade" id="nav-admin" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
         <p class="mt-4">Channels available for administration</p>
         <!-- List of channels which you are admin here -->
         [[if 'admin_channels' in globals() and len(admin_channels) > 0:]]
-        <p>Admin Channels Found.</p>
+        <div class="container">
+          <table class="table">
+            <thead>
+              <th scope="col">Tag</th>
+              <th scope="col">Channel</th>
+              <th scope="col">Actions</th>
+            </thead>
+            <tbody>
+              [[for c in admin_channels:]]
+              <tr>
+                <td><a href="[[=URL(f'c/{c.channel.tag}')]]" title="Go to Channel">[[=c.channel.tag]]</a></td>
+                <td>[[=c.channel.title]]</td>
+                <td><a href="javascript:void(0)" title="Edit Channel">[ Edit ]</a></td>
+              </tr>
+              [[pass]]
+            </tbody>
+          </table>
+        </div>
         [[else:]]
         <p><i>No channels for which you are an administrator were found.</i></p>
         [[pass]]

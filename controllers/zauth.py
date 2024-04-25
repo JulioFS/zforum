@@ -130,7 +130,7 @@ def auth_request_reset_password():
             token = auth.request_reset_password(user_email)  #, route='zauth')
     if (req.method == 'GET' or error is not None) and not is_cancel:
         return {'error': error}
-    return redirect(URL('index', vars={'action': 'rrp'}))
+    return redirect(URL('index', vars={'action': '' if is_cancel else 'rrp'}))
 
 @action('zauth/profile/<user_id>', method=['get', 'post'])
 @action('zauth/profile', method=['get', 'post'])
@@ -158,14 +158,33 @@ def profile(user_id=None):
             (db.member_setting_template.id==db.member_setting.template_id) & \
                 (db.member_setting.user_id==valid_user_id)))
     for row in rows:
+        match row.member_setting_template.name:
+            case 'zfmp_bio' | 'zfmp_sig':
+                form_type = 'text'
+            case 'zfmp_allow_pm':
+                form_type = 'check'
+            case _:
+                form_type = 'string'
         available_questions[row.member_setting_template.id] = {
             'template_name': row.member_setting_template.name,
             'description': row.member_setting_template.description,
-            'can_update': not row.member_setting_template.is_readonly or \
+            'restricted': row.member_setting_template.is_readonly and not \
                 is_admin,
-            'user_value': row.member_setting.value
+            'user_value': '' if row.member_setting.value is None else \
+                row.member_setting.value,
+            'form_type': form_type
         }
+    # Get a list of those channels for which the user is an administrator
+    admin_channels = db(db.channel).select(
+        join=db.channel_admin.on(
+            (db.channel.id==db.channel_admin.channel_id) &
+            (db.channel_admin.user_id==valid_user_id) &
+            (db.channel_admin.is_active==True)))
     if req.method == 'POST':
         # TODO Add logic
         x=1
-    return {'errors': errors, 'available_questions': available_questions}
+    return {
+        'errors': errors,
+        'available_questions': available_questions,
+        'admin_channels': admin_channels
+    }
