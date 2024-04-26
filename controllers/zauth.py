@@ -183,6 +183,7 @@ def profile(user_id=None):
     if req.method == 'POST':
         # TODO Add logic
         x=1
+    xxx=fh.get_member_property('zfmp_display_name')
     return {
         'errors': errors,
         'available_questions': available_questions,

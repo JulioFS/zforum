@@ -112,6 +112,44 @@ class ForumHelper:
             (db.channel_admin.channel_id==channel_id) &
             (db.channel_admin.is_active==True) &
             (db.channel_admin.user_id==user_id)).count() > 0
+    
+    def get_member_property(self, prop, user_id=None):
+        """ Reads the member value of a property """
+        if user_id is None:
+            # If userid is not passed, attempt to ge the current user.
+            user_id = auth.get_user().get('id', None)
+            if user_id is None:
+                return ''
+        # get_member_property('zfmp_display_name') -> 'CapricaSOS'
+        prop = db().select(
+            db.member_setting_template.id,
+            db.member_setting.value,
+            left=db.member_setting.on(
+                (db.member_setting_template.id==db.member_setting.template_id) & \
+                (db.member_setting_template.name==prop) & \
+                (db.member_setting.user_id==user_id)))
+        prop_value = ''
+        if prop:
+            prop_value = prop[0].member_setting.value or ''
+        return prop_value
+    
+    def put_member_properties(self, props, user_id=None):
+        """ receives a list of property values and creates/updates
+        the values of them.
+        props = [{prop_id: 1, prop_value: 'CapricaSOS'}, ...]
+        """
+        if user_id is None:
+            # If userid is not passed, attempt to ge the current user.
+            user_id = auth.get_user().get('id', None)
+            if user_id is None:
+                return False
+        for prop in props:
+            db.member_setting.update_or_insert(
+                user_id=user_id,
+                template_id=prop['prop_id'],
+                value=prop['prop_value'])
+        return True;
+
 
     def get_user_properties(self, user_id=None):
         """ Returns a list of properties (ordered by Property Name)
