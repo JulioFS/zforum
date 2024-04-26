@@ -8,6 +8,14 @@
 </div>
 [[pass]]
 
+[[if request.params.get('post_code', ''):]]
+<div class="container pt-3">
+  <div class="alert alert-success" role="alert">
+    [[if request.params.get('post_code', '') == '0':]]No Updates Required.[[else:]]Information Updated.[[pass]]
+  </div>
+</div>
+[[pass]]
+
 <div class="container-fluid px-0">
   <h3>User Profile</h3>
   <hr>
@@ -37,9 +45,11 @@
           <label for="[[=flds['template_name'] ]]" class="form-label">[[=flds['description'] ]]: </label>
           [[if flds['form_type'] == 'check':]]
           <input type="checkbox" class="form-check-input" id="[[=flds['template_name'] ]]"
+            name="[[=flds['template_name'] ]]"
             data-template-id="[[=template_id]]" [[if flds['restricted']:]]disabled[[pass]]>
           [[elif flds['form_type'] == 'text':]]
           <textarea class="form-control" id="[[=flds['template_name'] ]]"
+            name="[[=flds['template_name'] ]]"
             data-template-id="[[=template_id]]"
             [[if flds['restricted']:]]disabled[[pass]]
             rows="5">[[=request.forms.get(flds['template_name'], flds['user_value'])]]</textarea>
@@ -76,7 +86,7 @@
         </div>
         <p>Don't Remember Password?
           <a href="[[=URL('zauth/request_reset_password')]]" title="Request Reset Password">Request Password Reset</a></p>
-        <button type="submit" class="btn btn-primary" id="submit-settings" name="submit-settings">Submit</button>
+        <button type="submit" class="btn btn-primary" id="submit-password-request" name="submit-password-request">Submit</button>
       </div>
       <div class="tab-pane fade" id="nav-admin" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
         <p class="mt-4">Channels available for administration</p>

@@ -144,7 +144,13 @@ class ForumHelper:
             if user_id is None:
                 return False
         for prop in props:
+            # Use user_id and template_id to determine if record needs to be
+            # inserted or updated, so if these 2 exists, then update, this
+            # is done so updates to the value of a property does not trigger
+            # a full insert..
             db.member_setting.update_or_insert(
+                (db.member_setting.user_id==user_id) &
+                (db.member_setting.template_id==prop['prop_id']),
                 user_id=user_id,
                 template_id=prop['prop_id'],
                 value=prop['prop_value'])

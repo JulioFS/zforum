@@ -137,7 +137,6 @@ def auth_request_reset_password():
 @action.uses('profile.html', auth, db, session, T)
 def profile(user_id=None):
     """ Main user profile, not entirely similar to OOB """
-    req = request
     errors = []
     user = auth.get_user()
     if user is None:
@@ -149,6 +148,7 @@ def profile(user_id=None):
     is_admin = fh.is_sysadmin()
     valid_user_id = user.get('id')
     available_questions = {}
+    member_settings_map = {} # {'zfmp_display_name': 1, ...}
     if is_admin and user_id is not None:
         valid_user_id = user_id
     rows = db().select(
@@ -158,6 +158,8 @@ def profile(user_id=None):
             (db.member_setting_template.id==db.member_setting.template_id) & \
                 (db.member_setting.user_id==valid_user_id)))
     for row in rows:
+        member_settings_map[row.member_setting_template.name] = \
+            row.member_setting_template.id
         match row.member_setting_template.name:
             case 'zfmp_bio' | 'zfmp_sig':
                 form_type = 'text'
@@ -180,10 +182,31 @@ def profile(user_id=None):
             (db.channel.id==db.channel_admin.channel_id) &
             (db.channel_admin.user_id==valid_user_id) &
             (db.channel_admin.is_active==True)))
-    if req.method == 'POST':
-        # TODO Add logic
-        x=1
-    xxx=fh.get_member_property('zfmp_display_name')
+    if request.method == 'POST':
+        post_code = 0
+        # If form is posted, it means that either the user saved
+        form = request.forms
+        if 'submit-settings' in form:
+            update_props = []
+            # Update Properties
+            for fld in form.keys():
+                # Only update those for elements that are member properties,
+                # have a valid value, AND if a value exists, to be different
+                # from the original default value.
+                if fld.startswith('zfmp_') and form[fld].strip() and \
+                    available_questions[
+                        member_settings_map[fld]]['user_value'] != form[fld]:
+                    update_props.append({
+                        'prop_id': member_settings_map[fld],
+                        'prop_value': form[fld]
+                    })
+            if update_props:
+                fh.put_member_properties(update_props, valid_user_id)
+                post_code = 1
+        redirect(URL(f'zauth/profile/{valid_user_id}',
+                     vars={'post_code': post_code}))
+
+    #xxx=fh.get_member_property('zfmp_display_name')
     return {
         'errors': errors,
         'available_questions': available_questions,
