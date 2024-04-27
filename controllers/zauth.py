@@ -184,8 +184,9 @@ def profile(user_id=None):
             (db.channel_admin.is_active==True)))
     if request.method == 'POST':
         post_code = 0
-        # If form is posted, it means that either the user saved
         form = request.forms
+        # If form is posted, it means that either the user requested saving
+        # standard properties, or a password change..
         if 'submit-settings' in form:
             update_props = []
             # Update Properties
@@ -203,10 +204,40 @@ def profile(user_id=None):
             if update_props:
                 fh.put_member_properties(update_props, valid_user_id)
                 post_code = 1
-        redirect(URL(f'zauth/profile/{valid_user_id}',
-                     vars={'post_code': post_code}))
+        elif 'submit-password-request' in form:
+            # Password change request..
+            # Verify password and confirm are the same
+            # Verify current password is valid
+            cur_passwd = form.get('cur-passwd', '')
+            new_passwd = form.get('new-passwd', '')
+            new_passwd_c = form.get('new-passwd-c', '')
+            if new_passwd and new_passwd_c and len(new_passwd) >= 8:
+                if new_passwd != new_passwd_c:
+                    errors.append('Password and Confirmation do not match.')
+            else:
+                errors.append('Both new password and confirmation are required, additionally the minimum password '
+                              'length is 8 characters.')
+            
+            if not errors:
+                # Both new password and confirmation are valid, now verify that the current password is also valid
+                stored_passwd = db(db.auth_user.id==valid_user_id).select(db.auth_user.password).first()
+                cur_passwd_crypted = CRYPT()(cur_passwd)[0]
+                new_passwd_crypted = CRYPT()(new_passwd)[0]
+                if not stored_passwd.password:
+                    errors.append('It seems like this account was authenticated using an external provider. '
+                                  'Please use the login provider to log in again, or request a password reset.')
+                elif cur_passwd_crypted != stored_passwd.password:
+                    errors.append('Current password verification failed. Please select your current password again.')
+                elif new_passwd_crypted == stored_passwd.password:
+                    errors.append('New password and current password are the same.')
+                else:
+                    # Store the new password..
+                    db(db.auth_user.id==valid_user_id).update(password=new_passwd_crypted)
+                    post_code = 1
 
-    #xxx=fh.get_member_property('zfmp_display_name')
+        if not errors:
+            redirect(URL(f'zauth/profile/{valid_user_id}',
+                         vars={'post_code': post_code}))
     return {
         'errors': errors,
         'available_questions': available_questions,
