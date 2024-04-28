@@ -6,11 +6,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>zForum, a simple, no-ads Message Board System by rustix.DEV</title>
-  <!-- Font Awesome -->
-  <link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    rel="stylesheet"
-  />
   <!-- Google Fonts -->
   <link
     href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
@@ -135,7 +130,7 @@
         <div class="d-grid gap-2 mt-4">
           [[block page_sidebar]]
             [[if globals().get('user'):]]
-              <a class="btn btn-primary" href="[[=URL('new_channel')]]" role="button">New Channel</a>
+              <a class="btn btn-primary" href="[[=URL('channel_new')]]" role="button">New Channel</a>
             [[pass]]
           [[end]]
         </div>
@@ -146,6 +141,7 @@
 
   <!-- Bootstrap -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js" integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
   <!-- alt to moment.js -->
   <script src="[[=URL('static', 'js/luxon.min.js')]]"></script>
   [[block page_scripts]]<!-- individual pages can add scripts here -->[[end]]

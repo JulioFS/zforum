@@ -34,14 +34,14 @@ from yatl.helpers import A
 from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
 from ..forumhelper import forumhelper as fh
 
-@action('new_channel', method=['get', 'post'])
-@action.uses('new_channel.html', auth, T)
-def new_channel():
+@action('channel_new', method=['get', 'post'])
+@action.uses('channel_new.html', auth, T)
+def channel_new():
     """ /index entry point """
     errors = []
     user = auth.get_user()
-    if user is None:
-        redirect(URL('exception'))
+    if user.get('id', '') == '':
+        redirect(URL('ex/unauthorized'))
     form_submitted = request.method == 'POST'
     if form_submitted:
         req = request.forms
@@ -104,7 +104,62 @@ def new_channel():
 
     return {'errors': errors}
 
-# View a specific Channel
+# Admin a channel
+@action('channel/admin/<channel_id>', method=['get', 'post'])
+@action.uses('channel_admin.html', auth, T)
+def channel_admin(channel_id):
+    errors = []
+    user = auth.get_user()
+    if user is None:
+        redirect(URL('exception'))
+    # User must be a system admin or a channel_admin
+    c_admin = fh.is_channel_admin(user['id'], channel_id)
+    s_admin = fh.is_sysadmin(user['id'])
+    if c_admin or s_admin:
+        form_submitted = request.method == 'POST'
+        channel = db(db.channel.id==channel_id).select().first()
+        if channel:
+            channel_banner = fh.retrieve_channel_banner(
+                channel.id, channel.banner)
+            channel_info = {
+                'id': str(channel.id),
+                'tag': channel.tag,
+                'title': channel.title,
+                'content': channel.content,
+                'banner': channel_banner,
+                'banner_naked': channel.banner,
+                'is_public': channel.is_public
+            }
+            if form_submitted:
+                # Update channel requested
+                form = request.forms
+                if 'update-button' in form:
+                    # Requested Update
+                    # Can TAGs be changed???
+                    c_tag = ''
+                    c_title = ''
+                    c_description = ''
+                    c_banner = ''
+                    c_public = ''
+                    if errors:
+                        return {
+                            'channel_info': channel_info,
+                        'errors': errors
+                    }
+                # Back to channel.
+                redirect(URL(f'c/{channel.tag}'))
+            else:
+                # "HTTP GET", display edit form with defaults..
+                return {
+                    'channel_info': channel_info,
+                    'errors': errors
+                }
+        else:
+            redirect(URL('ex/tagnotfound'))
+    else:
+        redirect(URL('ex/unauthorized'))
+
+# Main Channel Index
 @action('c/<tag>')
 @action.uses('channel_index.html', auth, T)
 def channel_index(tag):
@@ -122,6 +177,7 @@ def channel_index(tag):
         channel_banner = fh.retrieve_channel_banner(
             z_channel.id, z_channel.banner)
         channel_info = {
+            'id': str(z_channel.id),
             'tag': z_channel.tag,
             'title': z_channel.title,
             'content': z_channel.content,

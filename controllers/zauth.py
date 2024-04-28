@@ -28,8 +28,7 @@ else your app will result in undefined behavior
 
 import random
 from py4web import action, request, response, abort, redirect, URL
-from yatl.helpers import A
-from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
+from ..common import db, session, T, cache, auth, logger, groups
 from ..forumhelper import forumhelper as fh
 from pydal.validators import CRYPT
 
