@@ -8,7 +8,7 @@
         <label for="search-box">Search in this page:</label>
       </div>
       <div class="col-auto">
-        <input type="text" class="form-control" id="search-box" placeholder="Search Within">
+        <input type="text" class="form-control" id="search-box" placeholder="Search within..">
       </div>
       <div class="col-auto">
         <a href="javascript:void(0)" id="clear-search-box"><i class="bi bi-x-circle"></i></a>
@@ -41,6 +41,7 @@
 
   clearSearchBox.addEventListener('click', () => {
     searchBox.value = '';
+    searchBox.focus();
     searchBox.dispatchEvent(new Event('keyup'));
     return false;
   });
