@@ -26,13 +26,14 @@ Warning: Fixtures MUST be declared with @action.uses({fixtures})
 else your app will result in undefined behavior
 """
 
-import random
+import os, random
 from better_profanity import profanity
 from lorem_text import lorem
 from py4web import action, request, response, abort, redirect, URL
 from yatl.helpers import A
 from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
 from ..forumhelper import forumhelper as fh
+from ..settings import Z_EXTERNAL_IMAGES, Z_INTERNAL_IMAGES
 
 @action('channel_new', method=['get', 'post'])
 @action.uses('channel_new.html', auth, T)
@@ -134,18 +135,71 @@ def channel_admin(channel_id):
                 # Update channel requested
                 form = request.forms
                 if 'update-button' in form:
-                    # Requested Update
-                    # Can TAGs be changed???
-                    c_tag = ''
-                    c_title = ''
-                    c_description = ''
-                    c_banner = ''
-                    c_public = ''
+
+
+                    
+                    # Channels (tags) will all be lowercase
+                    title = form.get('title', '')
+                    content = form.get('content', '')
+                    f_size = int(form.get('fSize', 0))
+                    remove_banner_request = form.get('remove-banner', False)
+                    # <ombott.request_pkg.helpers.FileUpload object at 
+                    # 0x107ecfc40>
+                    new_channel_banner = request.files.get('channel-img', None)
+                    if new_channel_banner is not None:
+                        if f_size > 1500000:
+                            errors.append('Upload banner too large, reduce '
+                                          'the size and try again.')
+                        elif not fh.verify_channel_banner(new_channel_banner):
+                            errors.append(
+                                'Unable to upload the banner for this channel.'
+                                ' Only valid image files are allowed.')
+                    # Checkboxes with uncheck state will not be available in
+                    # request.forms, otherwise it will contain the identifier 'on'
+                    is_public = form.get('is-public', False) and True
+                    if not title:
+                        errors.append('Title is required.')
+                    if not content:
+                        errors.append('Channel description is required.')
+
+                    if not errors:
+                        # Update Channel!
+                        # Default to existing channel banner (if available),
+                        # None if not defined..
+                        banner_name = channel.banner
+                        if new_channel_banner is not None:
+                            banner_name = new_channel_banner.filename
+                        channel.update_record(
+                            title=title,
+                            content=content,
+                            modified_by=user['id'],
+                            banner=banner_name,
+                            is_public=is_public)
+                        # Store/Replace banner image if available
+                        # Remove an existing banner only if you select a new
+                        # image and there is an exiting one already or user
+                        # selected removal of an existing one and there is an
+                        # existing one for sure.
+                        if (channel.banner and new_channel_banner) or \
+                            (channel.banner and remove_banner_request):
+                            cur_banner_filename = os.path.join(
+                                Z_EXTERNAL_IMAGES,
+                                'channels',
+                                str(channel_id),
+                                channel.banner)
+                            if os.path.isfile(cur_banner_filename):
+                                os.unlink(cur_banner_filename)
+                        if new_channel_banner is not None:
+                            fh.store_channel_banner(
+                                channel_id,
+                                new_channel_banner)
+
+
                     if errors:
                         return {
                             'channel_info': channel_info,
-                        'errors': errors
-                    }
+                            'errors': errors
+                        }
                 # Back to channel.
                 redirect(URL(f'c/{channel.tag}'))
             else:

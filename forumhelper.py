@@ -65,7 +65,7 @@ class ForumHelper:
         # Move to System Setings?
         available_content_types = ['image/jpeg', 'image/png']
         if payload is not None and \
-            payload.content_type in available_content_types:
+            payload.content_type.value in available_content_types:
             # payload is in instance of
             # <ombott.request_pkg.helpers.FileUpload object at 0x107ecfc40>
             return True
