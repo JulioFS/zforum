@@ -28,7 +28,7 @@ else your app will result in undefined behavior
 
 import os, random
 from better_profanity import profanity
-from lorem_text import lorem
+from markdown import markdown
 from py4web import action, request, response, abort, redirect, URL
 from yatl.helpers import A
 from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
@@ -127,6 +127,7 @@ def channel_admin(channel_id):
                 'tag': channel.tag,
                 'title': channel.title,
                 'content': channel.content,
+                'content_marked': markdown(channel.content),
                 'banner': channel_banner,
                 'banner_naked': channel.banner,
                 'is_public': channel.is_public
@@ -135,9 +136,6 @@ def channel_admin(channel_id):
                 # Update channel requested
                 form = request.forms
                 if 'update-button' in form:
-
-
-                    
                     # Channels (tags) will all be lowercase
                     title = form.get('title', '')
                     content = form.get('content', '')
@@ -193,8 +191,6 @@ def channel_admin(channel_id):
                             fh.store_channel_banner(
                                 channel_id,
                                 new_channel_banner)
-
-
                     if errors:
                         return {
                             'channel_info': channel_info,
@@ -235,6 +231,7 @@ def channel_index(tag):
             'tag': z_channel.tag,
             'title': z_channel.title,
             'content': z_channel.content,
+            'content_marked': markdown(z_channel.content),
             'banner': channel_banner,
             'is_public': is_public,
             'can_admin_channel': can_admin_channel

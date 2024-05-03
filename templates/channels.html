@@ -1,19 +1,72 @@
 [[extend 'zlayout.html']]
 
-<div class="container-fluid px-0">
+<div class="container px-0" id="results">
+
+  <form>
+    <div class="row g-3 align-items-center">
+      <div class="col-auto">
+        <label for="search-box">Search in this page:</label>
+      </div>
+      <div class="col-auto">
+        <input type="text" class="form-control" id="search-box" placeholder="Search Within">
+      </div>
+      <div class="col-auto">
+        <a href="javascript:void(0)" id="clear-search-box"><i class="bi bi-x-circle"></i></a>
+      </div>
+    </div>
+  </form>
+
+  <div id="results">
   [[for c in channels:]]
-  <div class="card mb-2">
+  <div class="card my-4 result">
     <h5 class="card-header"><a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
       href="[[=URL(f'c/{c.tag}')]]">/c/[[=c.tag]]</a></h5>
     <div class="card-body">
       <h5 class="card-title">[[=c.title]]</h5>
       <p class="card-text">[[=c.content]]</p>
     </div>
-    <div class="card-footer text-muted">
-      <span class="small">
-        <i class="fa-regular fa-rectangle-list"></i> 100 &nbsp;/&nbsp;
-        <i class="fa-regular fa-message"></i> 5,000</span>
-    </div>
   </div>
   [[pass]]
+  </div>
 </div>
+
+[[block page_scripts]]
+<script>
+    // Get the search box element
+  const searchBox = document.getElementById('search-box');
+  const clearSearchBox = document.getElementById('clear-search-box');
+
+  // Get the results element
+  const results = document.getElementById('results');
+
+  clearSearchBox.addEventListener('click', () => {
+    searchBox.value = '';
+    searchBox.dispatchEvent(new Event('keyup'));
+    return false;
+  });
+
+  // Add an event listener to the search box
+  searchBox.addEventListener('keyup', function() {
+    // Get the search value
+    const searchValue = this.value.toLowerCase();  
+
+    // Hide all the result divs
+    results.querySelectorAll('.result').forEach(result => {
+      result.style.display = 'none';
+    });
+
+    // Filter the result divs based on the search value
+    const filteredResults = Array.from(results.querySelectorAll('.result')).filter(result => {
+      const title = result.querySelector('h5').textContent.toLowerCase();
+      const content = result.querySelector('p').textContent.toLowerCase();
+
+      return title.includes(searchValue) || content.includes(searchValue);
+    });
+
+    // Show the filtered result divs
+    filteredResults.forEach(result => {
+      result.style.display = 'block';
+    });
+  });
+</script>
+[[end]]
