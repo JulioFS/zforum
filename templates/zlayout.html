@@ -21,7 +21,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+  <nav class="navbar navbar-expand-lg navbar-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="[[=URL('index')]]">zForum<span class="fs-6">.org</span></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -34,63 +34,59 @@
             <a class="nav-link active" aria-current="page" href="[[=URL('index')]]">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="[[=URL('channels')]]"><i class="bi bi-tv"></i> Channels</a>
+            <a class="nav-link" href="[[=URL('channels')]]">Channels</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-trophy"></i> Sponsors</a>
+            <a class="nav-link" href="[[=URL('index')]]">Sponsors</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-clipboard-check"></i> Rules</a>
+            <a class="nav-link" href="[[=URL('index')]]">Rules</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="[[=URL('index')]]"><i class="bi bi-file-earmark-person"></i> About</a>
+            <a class="nav-link" href="[[=URL('index')]]">About</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle"></i> User
+            </a>
+            <ul class="dropdown-menu">
+              [[if globals().get('user'):]]
+              <li><a class="dropdown-item" disabled>[[=globals().get('user').get('email')]]</a></li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <!-- If system detects user already logged in, allow profile: -->
+              <li><a class="dropdown-item" href="[[=URL('zauth/profile')]]">My Profile</a></li>
+              [[if 'change_password' in globals().get('actions', {}).get('allowed_actions', {}):]]
+              <li><a class="dropdown-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
+              [[pass]]
+              [[if globals().get('is_systemadmin', False):]]
+              <li><a class="dropdown-item" href="#">System Admin</a></li>
+              [[pass]]
+              <li><a class="dropdown-item" href="[[=URL('auth/logout')]]">Logout</a></li>
+              [[else:]]
+              <li><a class="dropdown-item" href="[[=URL('zauth/login')]]">Log In</a></li>
+              <li><a class="dropdown-item" href="[[=URL('zauth/register')]]">New Account</a></li>
+              [[pass]]
+            </ul>
           </li>
         </ul>
-        <form class="d-flex input-group w-auto">
-          <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-            aria-describedby="search-addon" />
-          <span class="input-group-text border-0" id="search-addon">
-            <i class="fas fa-search"></i>
-          </span>
+        <form class="d-flex" role="search">
+          <input class="form-control me-2" type="search" placeholder="Global Search.." aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
-        <div class="dropdown dropstart">
-          <a class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" href="#"
-            id="navbarDropdownMenuLink" role="button" aria-expanded="false">
-            <i class="bi bi-person-circle"></i>
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            [[if globals().get('user'):]]
-            <li><a class="dropdown-item" disabled>[[=globals().get('user').get('email')]]</a></li>
-            <li>
-              <hr class="dropdown-divider" />
-            </li>
-            <!-- If system detects user already logged in, allow profile: -->
-            <li><a class="dropdown-item" href="[[=URL('zauth/profile')]]">My Profile</a></li>
-            [[if 'change_password' in globals().get('actions', {}).get('allowed_actions', {}):]]
-            <li><a class="dropdown-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
-            [[pass]]
-            [[if globals().get('is_systemadmin', False):]]
-            <li><a class="dropdown-item" href="#">System Admin</a></li>
-            [[pass]]
-            <li><a class="dropdown-item" href="[[=URL('auth/logout')]]">Logout</a></li>
-            [[else:]]
-            <li><a class="dropdown-item" href="[[=URL('zauth/login')]]">Log In</a></li>
-            <li><a class="dropdown-item" href="[[=URL('zauth/register')]]">New Account</a></li>
-            [[pass]]
-          </ul>
-        </div>
       </div>
     </div>
   </nav>
 
   
   <!-- Main Content Container  -->
-  <div class="container-fluid d-flex flex-column">
+  <div class="container-fluid">
 
     <!-- Main header (spanning the entire width) -->
     [[block channel_header]]
-    <div class="row zforum-header flex-shrink-0">
-      <div class="col zforum-h-150">
+    <div class="row zforum-header">
+      <div class="col zforum-h-150 text-light">
           <h3><div class="m-2 p-2">/c/zForum</div></h3>
           [[if 'channel_desc' in globals():]]<p>[[=XML(channel_desc)]]</p>[[pass]]
       </div>
@@ -98,23 +94,19 @@
     [[end]]
 
     <!-- "Two-Column" Layout -->
-    <div class="row flex-grow-1 vh-100">
+    <div class="row">
 
       <!-- First "column", main content -->
-      <div class="col-sm-9 p-3 h-100 d-flex flex-column bg-dark">
+      <div class="col-md-9 p-3">
         <!-- Main Content -->
         [[include]]
       </div>
   
       <!--Second Column (Right Nav) - Move it to own block [???] -->
-      <div class="col-sm-3 feature p-3 bg-dark m-0 mh-100 d-flex flex-column">
+      <div class="col-md-3 order-first order-md-1 feature p-3 m-0">
   
         [[block subnav_lead]]
-        <!--
-        <div class="feature-icon d-inline-flex align-items-start justify-content-start fs-2 mb-3">
-          <i class="bi bi-tv"></i>
-        </div> //-->
-        <h4 class="fs-2 text-body-emphasis">Welcome Human</h4>
+        <h4 class="fs-2">Welcome Human</h4>
         <p>You've reached the main zForum channel, you are free to create your own channel
           or browse through the existing channels and topics. Topics shown on this
           page are those ranked higher by the community, however you may sort by newest

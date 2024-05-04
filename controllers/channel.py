@@ -38,7 +38,7 @@ from ..settings import Z_EXTERNAL_IMAGES, Z_INTERNAL_IMAGES
 @action('channel_new', method=['get', 'post'])
 @action.uses('channel_new.html', auth, T)
 def channel_new():
-    """ /index entry point """
+    """ New Channel Page - Authenticated Users """
     errors = []
     user = auth.get_user()
     if user.get('id', '') == '':
@@ -47,8 +47,9 @@ def channel_new():
     if form_submitted:
         req = request.forms
         if 'create-button' in req:
-            # Channels (tags) will all be lowercase
-            tag = req.get('tag', '').strip().lower()
+            # Even though a channel tag (name) can have any capitalization,
+            # no channel  will have the same name.
+            tag = req.get('tag', '').strip() #.lower()
             title = req.get('title', '')
             content = req.get('content', '')
             f_size = int(req.get('fSize', 0))
@@ -76,8 +77,9 @@ def channel_new():
                     errors.append('Tag is required, must not contain spaces, '
                                   'curse word(s), or invalid name.')
                 else:
-                    # Does the tag even exist?
-                    tag_exists = db(db.channel.tag == tag).count() > 0
+                    # Does the tag exist?
+                    tag_exists = db(
+                        db.channel.tag.lower() == tag.lower()).count() > 0
                     if tag_exists:
                         errors.append('Tag already exists.')
             if not errors:
@@ -126,6 +128,7 @@ def channel_admin(channel_id):
                 'id': str(channel.id),
                 'tag': channel.tag,
                 'title': channel.title,
+                'title_marked': markdown(channel.title),
                 'content': channel.content,
                 'content_marked': markdown(channel.content),
                 'banner': channel_banner,
@@ -217,6 +220,9 @@ def channel_index(tag):
     # Does it exist
     z_channel = db(db.channel.tag == tag).select(db.channel.ALL).first()
     if z_channel:
+        # Update the channel "views"
+        z_channel.view += 1
+        z_channel.update_record()
         user = auth.get_user()
         can_admin_channel = False
         if 'id' in user:
@@ -230,13 +236,18 @@ def channel_index(tag):
             'id': str(z_channel.id),
             'tag': z_channel.tag,
             'title': z_channel.title,
+            'title_marked': markdown(z_channel.title),
             'content': z_channel.content,
             'content_marked': markdown(z_channel.content),
             'banner': channel_banner,
             'is_public': is_public,
             'can_admin_channel': can_admin_channel
         }
-        payload = {'tag': tag, 'channel_info': channel_info}
+        payload = {
+            'tag': tag,
+            'channel_info': channel_info,
+            'topics': []
+        }
         return payload
     return redirect(URL('ex/tagnotfound'))
 
@@ -259,8 +270,16 @@ def channels():
     """
     # Ok, before we get all fancy, let's return a basic list of channels
     # c/xyz | This is the channel title | 100 Topics | 200 comments
-    all_channels = db().select(db.channel.ALL, orderby=db.channel.modified_on)
+    all_channels = db().select(db.channel.ALL, orderby=(
+        ~db.channel.view | ~db.channel.modified_on))
+    channel_list = []
+    for c in all_channels:
+        channel_list.append({
+            'channel': c,
+            'title_marked': markdown(c.title),
+            'content_marked': markdown(c.content)
+        })
     return {
-        'channels': all_channels,
+        'channels': channel_list,
         'channel_desc': 'Available Channels.'
     }

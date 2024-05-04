@@ -3,9 +3,9 @@
 [[block channel_header]]
 <div class="row [[if not channel_info['banner']:]]zforum-header[[pass]] flex-shrink-0"
 [[if channel_info['banner']:]]style="background-size:cover;background-repeat:no-repeat;background-image:url('[[=channel_info['banner']]]');"[[pass]]>
-  <div class="col zforum-h-150">
+  <div class="col zforum-h-150 text-light">
     <h3><div class="m-2 p-2">/c/[[=channel_info['tag']]]</div></h3>
-    <p>[[=XML(channel_info['title'])]]</p>
+    <p>[[=XML(channel_info['title_marked'], sanitize=True)]]</p>
   </div>
 </div>
 [[end]]

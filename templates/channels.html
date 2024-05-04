@@ -5,7 +5,7 @@
   <form>
     <div class="row g-3 align-items-center">
       <div class="col-auto">
-        <label for="search-box">Search in this page:</label>
+        <label for="search-box">Search here:</label>
       </div>
       <div class="col-auto">
         <input type="text" class="form-control" id="search-box" placeholder="Search within..">
@@ -20,10 +20,10 @@
   [[for c in channels:]]
   <div class="card my-4 result">
     <h5 class="card-header"><a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
-      href="[[=URL(f'c/{c.tag}')]]">/c/[[=c.tag]]</a></h5>
+      href="[[=URL('c/' + c['channel'].get('tag'))]]">/c/[[=c['channel'].get('tag')]]</a></h5>
     <div class="card-body">
-      <h5 class="card-title">[[=c.title]]</h5>
-      <p class="card-text">[[=c.content]]</p>
+      <h5 class="card-title">[[=XML(c['title_marked'], sanitize=True)]]</h5>
+      <p class="card-text">[[=XML(c['content_marked'], sanitize=True)]]</p>
     </div>
   </div>
   [[pass]]

@@ -8,12 +8,19 @@ from .common import db, Field
 
 now = datetime.datetime.utcnow
 
+# Rank: A measurement of how "important" the channel is for display
+# Rank = channel views (15%) + topics in it (50%) + responses to topics (35%)
+# Examples:
+# Channel 1: 10 views, 5 Topics, 20 Resp: (10*.15) + (5*.5) + (20*.35) = 11
+# Channel 2: 7 views, 15 Topics, 5 resp: (7*.15) + (15*.5) + (5*.35) = 10.3
 db.define_table(
     'channel',
     Field('tag', type='string', length=64), # Must Index
     Field('banner', type='string', length=128),
     Field('title', type='string', required=True, length=128),
     Field('content', type='text'),
+    Field('view', type='integer', default=0),
+    Field('rank', type='decimal(10,2)', default=0.0),
     Field('created_by', 'reference auth_user'),
     Field('created_on', type='datetime', default=now),
     Field('modified_by', 'reference auth_user' ),
