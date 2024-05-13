@@ -93,7 +93,6 @@ def channel_new():
                     content=content,
                     created_by=user['id'],
                     modified_by=user['id'],
-                    owner_id=user['id'],
                     banner=banner,
                     is_public=is_public)
                 # Store image if available

@@ -36,19 +36,18 @@ class ForumHelper:
         """ Given a channel id and user id, upsert a record in
         channel admin table with is_active=True """
         db.channel_admin.update_or_insert(
+            (db.channel_admin.user_id==user_id) & \
+                (db.channel_admin.channel_id==channel_id),
             user_id=user_id, channel_id=channel_id, is_active=True)
         
     def revoke_channel_admin(self, channel_id, user_id):
         """ Given a channel id and user id, upsert a record in
         channel admin table with is_active=False """
         db.channel_admin.update_or_insert(
+            (db.channel_admin.user_id==user_id) & \
+                (db.channel_admin.channel_id==channel_id),
             user_id=user_id, channel_id=channel_id, is_active=False)
-        
-    def is_channel_admin(self, channel_id, user_id):
-        """ True if user is channel admin, false otherwise """
-        return db(db.channel_admin.user_id==user_id &
-               db.channel_admin.channel_id==channel_id &
-               db.channel_admin.is_active==True).count() > 0
+
 
     def generate_file_location(self, fname):
         """ Generates a path location where to store a file """
@@ -132,7 +131,7 @@ class ForumHelper:
         if prop:
             prop_value = prop[0].member_setting.value or ''
         return prop_value
-    
+
     def put_member_properties(self, props, user_id=None):
         """ receives a list of property values and creates/updates
         the values of them.
@@ -154,8 +153,7 @@ class ForumHelper:
                 user_id=user_id,
                 template_id=prop['prop_id'],
                 value=prop['prop_value'])
-        return True;
-
+        return True
 
     def get_user_properties(self, user_id=None):
         """ Returns a list of properties (ordered by Property Name)

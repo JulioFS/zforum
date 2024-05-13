@@ -25,8 +25,8 @@ db.define_table(
     Field('created_on', type='datetime', default=now),
     Field('modified_by', 'reference auth_user' ),
     Field('modified_on', type='datetime', default=now, update=now),
-    Field('owner_id', 'reference auth_user'),
-    Field('is_public', type='boolean', default=True)
+    Field('is_public', type='boolean', default=True),
+    Field('is_banned', type="boolean", default=False)
 )
 db.commit()
 
