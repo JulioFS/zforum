@@ -176,11 +176,19 @@ def profile(user_id=None):
             'form_type': form_type
         }
     # Get a list of those channels for which the user is an administrator
-    admin_channels = db(db.channel).select(
-        join=db.channel_admin.on(
-            (db.channel.id==db.channel_admin.channel_id) &
-            (db.channel_admin.user_id==valid_user_id) &
-            (db.channel_admin.is_active==True)))
+    if is_admin:
+        admin_channels = db().select(
+            db.channel.id,
+            db.channel.tag,
+            db.channel.title,
+            orderby=db.channel.tag)
+        admin_channels.compact = False
+    else:
+        admin_channels = db(db.channel).select(
+            join=db.channel_admin.on(
+                (db.channel.id==db.channel_admin.channel_id) &
+                (db.channel_admin.user_id==valid_user_id) &
+                (db.channel_admin.is_active==True)), orderby=db.channel.tag)
     if request.method == 'POST':
         post_code = 0
         form = request.forms
@@ -238,7 +246,14 @@ def profile(user_id=None):
             redirect(URL(f'zauth/profile/{valid_user_id}',
                          vars={'post_code': post_code}))
     return {
+        'is_admin': is_admin,
         'errors': errors,
         'available_questions': available_questions,
         'admin_channels': admin_channels
     }
+
+@action('zauth/system_admin', method=['get', 'post'])
+@action.uses('system_admin.html', auth, db, session, T)
+def system_admin():
+    """ System Administration Page """
+    return {}

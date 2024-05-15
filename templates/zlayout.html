@@ -61,7 +61,7 @@
               <li><a class="dropdown-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
               [[pass]]
               [[if globals().get('is_systemadmin', False):]]
-              <li><a class="dropdown-item" href="#">System Admin</a></li>
+              <li><a class="dropdown-item" href="[[=URL('zauth/system_admin')]]">System Admin</a></li>
               [[pass]]
               <li><a class="dropdown-item" href="[[=URL('auth/logout')]]">Logout</a></li>
               [[else:]]

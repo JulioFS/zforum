@@ -1,0 +1,113 @@
+[[extend 'zlayout.html']]
+
+[[if errors:]]
+<div class="container pt-3">
+  <div class="alert alert-warning" role="alert">
+    <p>The following error(s) have been detected:</p>
+    <ul>
+      [[for error in errors:]]
+        <li>[[=error]]</li>
+      [[pass]]
+    </ul>
+  </div>
+</div>
+[[pass]]
+
+<div class="container-fluid">
+  <h4>Edit Channel Properties</h4>
+  <hr>
+  <form method="post" enctype="multipart/form-data" onsubmit="setFSize();" action="[[=URL('channel/admin/' + channel_info['id'])]]">
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label for="tag-ro" class="form-label">Channel Tag:</label>
+          <input type="text" class="form-control" id="tag-ro" aria-describedby="tag-help"
+            value="/c/[[=channel_info.get('tag', '')]]" name="tag-ro" disabled>
+          <div id="tag-help" class="form-text">This value cannot be changed.</div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label for="title" class="form-label">Channel Title:</label>
+          <input type="text" class="form-control" id="title" aria-describedby="title-help"
+            value="[[=request.forms.get('title', channel_info.get('title', ''))]]" name="title">
+          <div id="title-help" class="form-text">Short title of your channel, usually
+            consisting of a few sentences. This value is required.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label for="content" class="form-label">Channel Description:</label>
+          <textarea class="form-control" id="content" rows="3" name="content"
+            aria-describedby="desc-help">[[=request.forms.get('content', channel_info.get('content', ''))]]</textarea>
+          <div id="desc-help" class="form-text">A more detailed channel information
+            in markdown format, html is allowed, but it may be sanitized. 
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="mb-3">
+          <label for="channel-img" class="form-label">Channel Banner: [<i>[[=channel_info.get('banner_naked', 'No Banner Selected')]]</i>]</label>
+          <input class="form-control" type="file" id="channel-img" name="channel-img" aria-describedby="banner-help">
+          <div id="banner-help" class="form-text">Channel Banner, it will use the top-left
+            part of the uploaded image, and 150px height, large images may be declined. This 
+            value is optional, if this value is set, it will overwrite the existing banner.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="remove-banner"
+            name="remove-banner">
+          <label class="form-check-label" for="remove-banner">
+            Remove Banner <i>(if previously set)</i>. This value is ignored
+            if you choose a new banner to either add or replace an existing one.
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="is-public"
+            name="is-public"
+            [[if request.forms.get('is-public', channel_info.get('is_public', False)) or request.method == 'GET':]]checked[[pass]]>
+          <label class="form-check-label" for="is-public">
+            This channel is Public
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <input type="hidden" id="fSize" name="fSize" value="0">
+
+    <div class="my-3">
+      <button type="submit" class="btn btn-primary" id="update-button" name="update-button">Update Channel</button>
+      <button type="submit" class="btn btn-primary" id="cancel-button" name="cancel-button">Cancel</button>
+    </div>
+  </form>
+</div>
+
+
+[[block page_scripts]]
+<script>
+  let setFSize = () => {
+    let fSize = 0;
+    let fileInput = document.getElementById('channel-img');
+    if (fileInput.files.length > 0) {
+      fSize = fileInput.files[0].size;
+    }
+    document.getElementById('fSize').value = fSize.toString();
+    return true;
+  }
+</script>
+[[end]]
