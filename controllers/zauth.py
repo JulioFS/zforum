@@ -256,4 +256,36 @@ def profile(user_id=None):
 @action.uses('system_admin.html', auth, db, session, T)
 def system_admin():
     """ System Administration Page """
-    return {}
+    errors = {}
+    payload = {}
+    payload_updated = ''
+    is_admin = fh.is_sysadmin()
+    if not is_admin:
+        redirect(URL('ex/unauthorized'))
+
+    # Retrieve the system administration information
+    # name, value, description
+    system_settings = db().select(
+        db.system_setting.ALL, orderby=db.system_setting.name).as_list()
+
+    if request.method == 'POST':
+        form = request.forms
+        # If form is posted, it means that either the admin requested saving
+        # properties (orccancel)
+        if 'update-button' in form:
+            # Loop through the system_settings, get the appropriate value
+            # from the form, and update the record if the values are different
+            payload_updated = 'No Updates Required'
+            for setting in system_settings:
+                if setting['value'] != form.get(setting['name']):
+                    rec = db(db.system_setting.name==setting['name']).select().first()
+                    rec.update_record(value=form.get(setting['name']))
+                    payload_updated = 'System Updated'
+        else: # Cancel
+            redirect(URL('index'))
+
+    payload['errors'] = errors
+    payload['system_updated'] = payload_updated
+    payload['system_settings'] = system_settings
+
+    return payload
