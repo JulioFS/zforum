@@ -52,12 +52,9 @@ def index():
 @action.uses('exception.html')
 def exception(err):
     """ Handles handled exceptions (controlled) """
-    error_message = 'Unknown Exception.'
-    if err:
-        if err == 'unauthorized':
-            error_message = ('Not authorized to access this resource, '
-                             'please contact the forum administrator.')
-        elif err == 'tagnotfound':
-            error_message = ('Unable to find the selected channel '
-                             'or you do not have the proper access.')
+    default_error = f'Unknown Exception: ${err}'
+    error_message = db(
+        db.error_messages.message_key==err).select(
+            db.error_messages.description).first().get(
+                'description', default_error)
     return {'error': error_message}

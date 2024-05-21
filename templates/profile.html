@@ -107,7 +107,7 @@
               <tr>
                 <td><a href="[[=URL(f'c/{c.channel.tag}')]]" title="Go to Channel">[[=c.channel.tag]]</a></td>
                 <td>[[=c.channel.title]]</td>
-                <td><a href="javascript:void(0)" title="Edit Channel">[ Edit ]</a></td>
+                <td><a href="[[=URL(f'channel/admin/{c.channel.id}')]]" title="Edit Channel">[ Edit ]</a></td>
               </tr>
               [[pass]]
             </tbody>

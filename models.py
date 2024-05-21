@@ -174,9 +174,30 @@ db.define_table(
 )
 db.commit()
 
+# Miscellaneous error messages
+db.define_table(
+    'error_messages',
+    Field('message_key', type='string', length=64, notnull=False),
+    Field('description', type='string', length=256, notnull=False)
+)
+db.commit()
+
 # Some tables must have necessary information for the system to operate
 # correctly, verify that this is the case and populate the appropriate
 # tables if needed:
+
+# System Error Messages
+if db(db.error_messages).isempty():
+    error_messages = [
+        {'unauthorized', 'Not authorized to access this resource, please '
+         'contact the forum administrator.'
+        },
+        {'tagnotfound', 'Unable to find the selected channel '
+         'or you do not have the proper access.'
+        }
+    ]
+    db.error_messages.bulk_insert(error_messages)
+    db.commit()
 
 # Personal Messages:
 if db(db.message_categories).isempty():
@@ -199,6 +220,7 @@ if db(db.message_categories).isempty():
         }
     ]
     db.message_categories.bulk_insert(categories)
+    db.commit()
 
 # System Settings
 if db(db.system_setting).isempty():

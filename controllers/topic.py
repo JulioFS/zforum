@@ -33,8 +33,8 @@ from ..common import db, session, T, cache, auth, logger, authenticated, unauthe
 from ..forumhelper import forumhelper as fh
 
 
-@action('new_topic')
-@action.uses('index.html', auth, T)
+@action('topic/new')
+@action.uses('topic_new.html', auth, session, T)
 def new_topic():
     """ /index entry point """
     user = auth.get_user()
