@@ -1,0 +1,48 @@
+[[extend 'zlayout.html']]
+
+[[if errors:]]
+<div class="container pt-3">
+  <div class="alert alert-warning" role="alert">
+    <p>The following error(s) have been detected:</p>
+    <ul>
+      [[for error in errors:]]
+        <li>[[=error]]</li>
+      [[pass]]
+    </ul>
+  </div>
+</div>
+[[pass]]
+
+[[if system_updated:]]
+<div class="container pt-3">
+  <div class="alert alert-success" role="alert">
+    <p>[[=system_updated]].</p>
+  </div>
+</div>
+[[pass]]
+
+<div class="container-fluid">
+  <h4>System Properties</h4>
+  <hr>
+  <form method="post" enctype="multipart/form-data" action="[[=URL('zauth/system_admin')]]">
+
+    [[for setting in system_settings:]]
+    <div class="row">
+      <div class="col">
+        <div class="mb-4">
+          <label for="title" class="form-label">[[=setting.get('name')]]:</label>
+          <input type="text" class="form-control" id="[[=setting.get('name')]]" name="[[=setting.get('name')]]"
+            aria-describedby="title-help"
+            value="[[=request.forms.get(setting.get('name'), setting.get('value', ''))]]">
+          <div id="title-help" class="form-text">[[=setting.get('description')]]</div>
+        </div>
+      </div>
+    </div>
+    [[pass]]
+
+    <div class="my-3">
+      <button type="submit" class="btn btn-primary" id="update-button" name="update-button">Update</button>
+      <button type="submit" class="btn btn-primary" id="cancel-button" name="cancel-button">Cancel</button>
+    </div>
+  </form>
+</div>

@@ -43,6 +43,7 @@
           to your account. Some fields may not be editable if you are not an administrator.
         </p>
         <hr class="mb-4">
+        <p cass="mb-3">Email: [[=user.get('email')]], System Administrator: [[=is_admin]]</p>
         [[for template_id, flds in available_questions.items():]]
         <div class="mb-3">
           <label for="[[=flds['template_name'] ]]" class="form-label">[[=flds['description'] ]]: </label>
@@ -92,7 +93,7 @@
         <button type="submit" class="btn btn-primary" id="submit-password-request" name="submit-password-request">Submit</button>
       </div>
       <div class="tab-pane fade" id="nav-admin" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
-        <p class="mt-4">Channels available for administration</p>
+        <p class="mt-4">Channels available for administration:</p>
         <!-- List of channels which you are admin here -->
         [[if 'admin_channels' in globals() and len(admin_channels) > 0:]]
         <div class="container">

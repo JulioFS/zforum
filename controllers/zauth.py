@@ -176,11 +176,19 @@ def profile(user_id=None):
             'form_type': form_type
         }
     # Get a list of those channels for which the user is an administrator
-    admin_channels = db(db.channel).select(
-        join=db.channel_admin.on(
-            (db.channel.id==db.channel_admin.channel_id) &
-            (db.channel_admin.user_id==valid_user_id) &
-            (db.channel_admin.is_active==True)))
+    if is_admin:
+        admin_channels = db().select(
+            db.channel.id,
+            db.channel.tag,
+            db.channel.title,
+            orderby=db.channel.tag)
+        admin_channels.compact = False
+    else:
+        admin_channels = db(db.channel).select(
+            join=db.channel_admin.on(
+                (db.channel.id==db.channel_admin.channel_id) &
+                (db.channel_admin.user_id==valid_user_id) &
+                (db.channel_admin.is_active==True)), orderby=db.channel.tag)
     if request.method == 'POST':
         post_code = 0
         form = request.forms
@@ -238,7 +246,46 @@ def profile(user_id=None):
             redirect(URL(f'zauth/profile/{valid_user_id}',
                          vars={'post_code': post_code}))
     return {
+        'is_admin': is_admin,
         'errors': errors,
         'available_questions': available_questions,
         'admin_channels': admin_channels
     }
+
+@action('zauth/system_admin', method=['get', 'post'])
+@action.uses('system_admin.html', auth, db, session, T)
+def system_admin():
+    """ System Administration Page """
+    errors = {}
+    payload = {}
+    payload_updated = ''
+    is_admin = fh.is_sysadmin()
+    if not is_admin:
+        redirect(URL('ex/unauthorized'))
+
+    # Retrieve the system administration information
+    # name, value, description
+    system_settings = db().select(
+        db.system_setting.ALL, orderby=db.system_setting.name).as_list()
+
+    if request.method == 'POST':
+        form = request.forms
+        # If form is posted, it means that either the admin requested saving
+        # properties (orccancel)
+        if 'update-button' in form:
+            # Loop through the system_settings, get the appropriate value
+            # from the form, and update the record if the values are different
+            payload_updated = 'No Updates Required'
+            for setting in system_settings:
+                if setting['value'] != form.get(setting['name']):
+                    rec = db(db.system_setting.name==setting['name']).select().first()
+                    rec.update_record(value=form.get(setting['name']))
+                    payload_updated = 'System Updated'
+        else: # Cancel
+            redirect(URL('index'))
+
+    payload['errors'] = errors
+    payload['system_updated'] = payload_updated
+    payload['system_settings'] = system_settings
+
+    return payload

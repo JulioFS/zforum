@@ -45,7 +45,7 @@ class ForumHelper:
         channel admin table with is_active=False """
         db.channel_admin.update_or_insert(
             (db.channel_admin.user_id==user_id) & \
-                (db.channel_admin.channel_id==channel_id),
+                (db.channel_admin.channel_id==channel_id), 
             user_id=user_id, channel_id=channel_id, is_active=False)
 
 

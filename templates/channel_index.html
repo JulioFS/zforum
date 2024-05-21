@@ -15,8 +15,9 @@
     <a class="btn btn-primary" href="[[=URL('topic/new')]]" role="button">New Topic</a>
   [[pass]]
   [[if globals().get('channel_info', {}).get('can_admin_channel', False):]]
-    <a class="btn btn-primary" href="[[=URL('channel/admin/' + globals().get('channel_info', {}).get('id'))]]" role="button">Manage Channel</a>
+    <a class="btn btn-primary" href="[[=URL('channel/admin/' + globals().get('channel_info', {}).get('id'))]]" role="button">* Manage Channel</a>
   [[pass]]
+  [[if channel_info.get('can_admin_channel', False):]]<i class="text-muted">* You are an admin on this channel.</i>[[pass]]
 [[end]]
 
 [[block subnav_lead]]
