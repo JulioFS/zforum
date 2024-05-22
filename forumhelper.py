@@ -104,7 +104,7 @@ class ForumHelper:
 
     def is_channel_admin(self, user_id, channel_id):
         """ A channel Admin is any authenticated user that creates
-        a own channel, however, a channel admin (or a sysadmin) can make
+        an own channel, however, a channel admin (or a sysadmin) can make
         any user administrative rights to any channel they control.
         """
         return db(

@@ -1,5 +1,5 @@
 """
-ZForum database model.
+zForum database model.
 """
 
 import datetime
@@ -13,6 +13,10 @@ now = datetime.datetime.utcnow
 # Examples:
 # Channel 1: 10 views, 5 Topics, 20 Resp: (10*.15) + (5*.5) + (20*.35) = 11
 # Channel 2: 7 views, 15 Topics, 5 resp: (7*.15) + (15*.5) + (5*.35) = 10.3
+# If channel is_private, then it won't show in search results,
+#   however still will be ranked.
+# If channel requires_membership, it means that, regadless if it is_private
+#   the auth user will require membership to add/reply to topics.
 db.define_table(
     'channel',
     Field('tag', type='string', length=64), # Must Index
@@ -25,11 +29,32 @@ db.define_table(
     Field('created_on', type='datetime', default=now),
     Field('modified_by', 'reference auth_user' ),
     Field('modified_on', type='datetime', default=now, update=now),
-    Field('is_public', type='boolean', default=True),
+    Field('is_private', type='boolean', default=False),
+    Field('requires_membership', type='boolean', default=False),
     Field('is_banned', type="boolean", default=False)
 )
 db.commit()
 
+# A channel_membership record will be necessary for a user if the channel
+# requires_membership (independent if the channel is_private or not),
+# Users visiting these type of channels will have the option to "request"
+# a membership to the channel admin
+db.define_table(
+    'channel_membership',
+    Field('user_id', 'reference auth_user'),
+    Field('channel_id', 'reference  channel'),
+    Field('is_new_request', type='boolean', default=True),
+    Field('expires_on', type='datetime'),
+    Field('created_by', 'reference auth_user'),
+    Field('created_on', type='datetime', default=now),
+    Field('modified_by', 'reference auth_user' ),
+    Field('modified_on', type='datetime', default=now, update=now)
+)
+db.commit()
+
+# A channel subscription just means that the user has "favorited" the
+# Channel, the user would still need to have a membership to add/reply
+# posts in the channel if it requires_membership
 db.define_table(
     'channel_subscription',
     Field('channel_id', 'reference channel'),

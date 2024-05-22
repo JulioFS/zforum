@@ -12,7 +12,7 @@
 
 [[block page_sidebar]]
   [[if globals().get('user', {}).get('id', False):]]
-    <a class="btn btn-primary" href="[[=URL('topic/new')]]" role="button">New Topic</a>
+    <a class="btn btn-primary" href="[[=URL(f"/c/{channel_info['tag']}/topic/new")]]" role="button">New Topic</a>
   [[pass]]
   [[if globals().get('channel_info', {}).get('can_admin_channel', False):]]
     <a class="btn btn-primary" href="[[=URL('channel/admin/' + globals().get('channel_info', {}).get('id'))]]" role="button">* Manage Channel</a>

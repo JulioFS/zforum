@@ -33,10 +33,25 @@ from ..common import db, session, T, cache, auth, logger, authenticated, unauthe
 from ..forumhelper import forumhelper as fh
 
 
-@action('topic/new')
+@action('c/<channel_tag>/topic/new', method=['get', 'post'])
 @action.uses('topic_new.html', auth, session, T)
-def new_topic():
-    """ /index entry point """
+def new_topic(channel_tag):
+    """ New Topic, only allowed if the user is authenticated, and either:
+    The channel is public
+    Or
+    Channel is Private and user is member of the channel.
+    Or
+    User is System/Channel Admin
+    """
     user = auth.get_user()
+    channel = db(db.channel.tag==channel_tag).select(db.channel.ALL).first()
+    is_admin = fh.is_sysadmin()
+    is_channel_admin = fh.is_channel_admin(user['id'], channel['id'])
+    if not user:
+        redirect(URL('ex/unauthorized'))
+    if not channel:
+        redirect(URL('ex/tagnotfound'))
+    if not channel['is_public']:
+        # Channel NOT public, you need to be member, or an admin to add topics
     return {}
 
