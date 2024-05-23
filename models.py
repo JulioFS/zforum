@@ -42,7 +42,7 @@ db.commit()
 db.define_table(
     'channel_membership',
     Field('user_id', 'reference auth_user'),
-    Field('channel_id', 'reference  channel'),
+    Field('channel_id', 'reference channel'),
     Field('is_new_request', type='boolean', default=True),
     Field('expires_on', type='datetime'),
     Field('created_by', 'reference auth_user'),

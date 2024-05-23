@@ -17,10 +17,23 @@ APP_NAME = os.path.split(APP_FOLDER)[-1]
 DB_FOLDER = required_folder(APP_FOLDER, 'databases')
 DB_URI = 'override-in-settings-private'
 DB_POOL_SIZE = 1
-# fake migrate true tells py4web you have the tables in db but you#
-# deleted the metadata.
-DB_MIGRATE = False # True if DB does not exist AT ALL (no *.table files) (or rebuilding) else False
-DB_FAKE_MIGRATE = True  # True if rebuilding metadata else False
+# Understanding there is a lot of confusion about Database migrations, here's
+# My Take on it:
+# DB_MIGRATE will create the actual SQL table unless an existing .table file
+# exists, if you modify your model, and modify/add tables and whatnot, the
+# best thing to do is to delete the .table file and run the app with this
+# value set.
+# DB_FAKE_MIGRATE seems to help in generating py4web's own metadata (.table
+# files, from whatever it finds in the model, whis is very helpful.
+# This is why there is usually a combination of both to make things work
+# depending on your specific circumstances, but generally:
+# On a brand new project, the first is True, and the Second False.
+# On an existing project, where a new table is added to the model, both true.
+# On an existing project, where changes are performed (add, update) to the
+# model, it is best to delete the .table file(s) and set both to True
+# On production, both are False.
+DB_MIGRATE = False # True if DB does not exist (no *.table files) (or changes to model)
+DB_FAKE_MIGRATE = False  # Mainly for rebuilding metadata
 
 # location where static files are stored:
 STATIC_FOLDER = required_folder(APP_FOLDER, "static")
