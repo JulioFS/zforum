@@ -88,11 +88,23 @@
         <div class="row">
           <div class="col">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="is-public"
-                name="is-public"
-                [[if request.forms.get('is-public', '') or request.method == 'GET':]]checked[[pass]]>
-              <label class="form-check-label" for="is-public">
-                This channel is Public
+              <input class="form-check-input" type="checkbox" id="is-private"
+                name="is-private"
+                [[if request.forms.get('is-private', False):]]checked[[pass]]>
+              <label class="form-check-label" for="is-private">
+                This channel is private.
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="requires-membership"
+                name="requires-membership"
+                [[if request.forms.get('requires-membership', False):]]checked[[pass]]>
+              <label class="form-check-label" for="requires-membership">
+                This channel requires membership.
               </label>
             </div>
           </div>

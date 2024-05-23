@@ -1,5 +1,24 @@
 [[extend 'zlayout.html']]
 
+[[block channel_header]]
+<div class="row [[if not channel_info['banner']:]]zforum-header[[pass]] flex-shrink-0"
+[[if channel_info['banner']:]]style="background-size:cover;background-repeat:no-repeat;background-image:url('[[=channel_info['banner']]]');"[[pass]]>
+  <div class="col zforum-h-150 text-light">
+    <h3><div class="m-2 p-2">/c/[[=channel_info['tag']]]</div></h3>
+    <p>[[=XML(channel_info['title_marked'], sanitize=True)]]</p>
+  </div>
+</div>
+[[end]]
+
+[[block subnav_lead]]
+<h3 class="fs-2">[[=channel_info['tag']]]</h3>
+<p>[[=XML(channel_info['content_marked'], sanitize=True)]]</p>
+[[end]]
+
+[[block page_sidebar]]
+<!-- No buttons or content on right nav below subnav lead -->
+[[end]]
+
 <h3>New Topic</h3>
 <hr>
 

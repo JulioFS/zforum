@@ -45,14 +45,14 @@ def channel_new():
         redirect(URL('ex/unauthorized'))
     form_submitted = request.method == 'POST'
     if form_submitted:
-        req = request.forms
-        if 'create-button' in req:
+        form = request.forms
+        if 'create-button' in form:
             # Even though a channel tag (name) can have any capitalization,
             # no channel  will have the same name.
-            tag = req.get('tag', '').strip() #.lower()
-            title = req.get('title', '')
-            content = req.get('content', '')
-            f_size = int(req.get('fSize', 0))
+            tag = form.get('tag', '').strip() #.lower()
+            title = form.get('title', '')
+            content = form.get('content', '')
+            f_size = int(form.get('fSize', 0))
             # <ombott.request_pkg.helpers.FileUpload object at 0x107ecfc40>
             channel_banner = request.files.get('channel-img', None)
             if channel_banner is not None:
@@ -65,7 +65,9 @@ def channel_new():
                         'Only valid image files are allowed.')
             # Checkboxes with uncheck state will not be available in
             # request.forms, otherwise it will contain the identifier 'on'
-            is_private = req.get('is-private', False) and True
+            is_private = form.get('is-private', False) and True
+            requires_membership = form.get(
+                'requires-membership', False) and True
             if not title:
                 errors.append('Title is required.')
             if not content:
@@ -94,7 +96,8 @@ def channel_new():
                     created_by=user['id'],
                     modified_by=user['id'],
                     banner=banner,
-                    is_private=is_private)
+                    is_private=is_private,
+                    requires_membership=requires_membership)
                 # Store image if available
                 if channel_banner is not None:
                     fh.store_channel_banner(channel_id, channel_banner)
@@ -110,6 +113,7 @@ def channel_new():
 @action('channel/admin/<channel_id>', method=['get', 'post'])
 @action.uses('channel_admin.html', auth, T)
 def channel_admin(channel_id):
+    """ Channel Administration via Sys Admin Or Channel Admin """
     errors = []
     user = auth.get_user()
     if user is None:
@@ -158,7 +162,8 @@ def channel_admin(channel_id):
                     # Checkboxes with uncheck state will not be available in
                     # request.forms, otherwise it will contain the identifier 'on'
                     is_private = form.get('is-private', False) and True
-                    requires_membership = form.get('requires-membership', False) and True
+                    requires_membership = form.get(
+                        'requires-membership', False) and True
                     if not title:
                         errors.append('Title is required.')
                     if not content:
@@ -220,29 +225,31 @@ def channel_admin(channel_id):
 def channel_index(tag):
     """ Main Index for a channel """
     # Does it exist
-    z_channel = db(db.channel.tag == tag).select(db.channel.ALL).first()
-    if z_channel:
+    channel = db(db.channel.tag == tag).select(db.channel.ALL).first()
+    if channel:
         # Update the channel "views"
-        z_channel.view += 1
-        z_channel.update_record()
+        channel.view += 1
+        channel.update_record()
         user = auth.get_user()
         can_admin_channel = False
         if 'id' in user:
             can_admin_channel = fh.is_channel_admin(
-                user['id'], z_channel.id) or fh.is_sysadmin(user['id'])
-        # TODO Handle considerations for private channels
-        is_private = z_channel.is_private
+                user['id'], channel.id) or fh.is_sysadmin(user['id'])
+        # TODO Handle considerations for private/membership channels
+        is_private = channel.is_private
+        requires_membership = channel.requires_membership
         channel_banner = fh.retrieve_channel_banner(
-            z_channel.id, z_channel.banner)
+            channel.id, channel.banner)
         channel_info = {
-            'id': str(z_channel.id),
-            'tag': z_channel.tag,
-            'title': z_channel.title,
-            'title_marked': markdown(z_channel.title),
-            'content': z_channel.content,
-            'content_marked': markdown(z_channel.content),
+            'id': str(channel.id),
+            'tag': channel.tag,
+            'title': channel.title,
+            'title_marked': markdown(channel.title),
+            'content': channel.content,
+            'content_marked': markdown(channel.content),
             'banner': channel_banner,
             'is_private': is_private,
+            'requires_membership': requires_membership,
             'can_admin_channel': can_admin_channel
         }
         payload = {

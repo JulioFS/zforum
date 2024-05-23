@@ -27,6 +27,7 @@ else your app will result in undefined behavior
 """
 
 import random
+from markdown import markdown
 from py4web import action, request, response, abort, redirect, URL
 from yatl.helpers import A
 from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
@@ -51,5 +52,21 @@ def new_topic(channel_tag):
         redirect(URL('ex/unauthorized'))
     if not channel:
         redirect(URL('ex/tagnotfound'))
-    return {}
-
+    # TODO Handle considerations for private/membership channels
+    is_private = channel.is_private
+    requires_membership = channel.requires_membership
+    channel_banner = fh.retrieve_channel_banner(
+        channel.id, channel.banner)
+    channel_info = {
+        'id': str(channel.id),
+        'tag': channel.tag,
+        'title': channel.title,
+        'title_marked': markdown(channel.title),
+        'content': channel.content,
+        'content_marked': markdown(channel.content),
+        'banner': channel_banner,
+        'is_private': is_private,
+        'requires_membership': requires_membership,
+        'can_admin_channel': is_channel_admin or is_admin
+    }
+    return {'channel_info': channel_info}
