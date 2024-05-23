@@ -65,7 +65,7 @@ def channel_new():
                         'Only valid image files are allowed.')
             # Checkboxes with uncheck state will not be available in
             # request.forms, otherwise it will contain the identifier 'on'
-            is_public = req.get('is-public', False) and True
+            is_private = req.get('is-private', False) and True
             if not title:
                 errors.append('Title is required.')
             if not content:
@@ -94,7 +94,7 @@ def channel_new():
                     created_by=user['id'],
                     modified_by=user['id'],
                     banner=banner,
-                    is_public=is_public)
+                    is_private=is_private)
                 # Store image if available
                 if channel_banner is not None:
                     fh.store_channel_banner(channel_id, channel_banner)
@@ -132,7 +132,8 @@ def channel_admin(channel_id):
                 'content_marked': markdown(channel.content),
                 'banner': channel_banner,
                 'banner_naked': channel.banner,
-                'is_public': channel.is_public
+                'is_private': channel.is_private,
+                'requires_membership': channel.requires_membership
             }
             if form_submitted:
                 # Update channel requested
@@ -156,7 +157,8 @@ def channel_admin(channel_id):
                                 ' Only valid image files are allowed.')
                     # Checkboxes with uncheck state will not be available in
                     # request.forms, otherwise it will contain the identifier 'on'
-                    is_public = form.get('is-public', False) and True
+                    is_private = form.get('is-private', False) and True
+                    requires_membership = form.get('requires-membership', False) and True
                     if not title:
                         errors.append('Title is required.')
                     if not content:
@@ -174,7 +176,8 @@ def channel_admin(channel_id):
                             content=content,
                             modified_by=user['id'],
                             banner=banner_name,
-                            is_public=is_public)
+                            is_private=is_private,
+                            requires_membership=requires_membership)
                         # Store/Replace banner image if available
                         # Remove an existing banner only if you select a new
                         # image and there is an exiting one already or user
@@ -228,7 +231,7 @@ def channel_index(tag):
             can_admin_channel = fh.is_channel_admin(
                 user['id'], z_channel.id) or fh.is_sysadmin(user['id'])
         # TODO Handle considerations for private channels
-        is_public = z_channel.is_public
+        is_private = z_channel.is_private
         channel_banner = fh.retrieve_channel_banner(
             z_channel.id, z_channel.banner)
         channel_info = {
@@ -239,7 +242,7 @@ def channel_index(tag):
             'content': z_channel.content,
             'content_marked': markdown(z_channel.content),
             'banner': channel_banner,
-            'is_public': is_public,
+            'is_private': is_private,
             'can_admin_channel': can_admin_channel
         }
         payload = {
@@ -260,15 +263,13 @@ def channel_action(tag, channel_action):
 def channels():
     """ Retrieves all channels that the user is allowed to
     access, channels that are returned are those in which:
-    channel.is_public = True
+    channel.is_private = False
     channel.owner_id is the currently auth user.
     User is a channel admin (via channel_admin.user_id *and is_active*)
     The order of the retrieval should be based on several factors, essentially
     those channels with more topic views and upvotes should be moved higher,
     another option is to order by the last date any of its topics were 
     """
-    # Ok, before we get all fancy, let's return a basic list of channels
-    # c/xyz | This is the channel title | 100 Topics | 200 comments
     all_channels = db().select(db.channel.ALL, orderby=(
         ~db.channel.view | ~db.channel.modified_on))
     channel_list = []

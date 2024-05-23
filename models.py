@@ -13,8 +13,8 @@ now = datetime.datetime.utcnow
 # Examples:
 # Channel 1: 10 views, 5 Topics, 20 Resp: (10*.15) + (5*.5) + (20*.35) = 11
 # Channel 2: 7 views, 15 Topics, 5 resp: (7*.15) + (15*.5) + (5*.35) = 10.3
-# If channel is_private, then it won't show in search results,
-#   however still will be ranked.
+# If channel is_private, then it won't show in search results, it will still
+#   be ranked.
 # If channel requires_membership, it means that, regadless if it is_private
 #   the auth user will require membership to add/reply to topics.
 db.define_table(

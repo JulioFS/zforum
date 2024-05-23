@@ -51,7 +51,5 @@ def new_topic(channel_tag):
         redirect(URL('ex/unauthorized'))
     if not channel:
         redirect(URL('ex/tagnotfound'))
-    if not channel['is_public']:
-        # Channel NOT public, you need to be member, or an admin to add topics
     return {}
 
