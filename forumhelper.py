@@ -4,6 +4,7 @@ Utilities for forum actions.
 import hashlib
 import uuid
 import os
+from datetime import datetime, timedelta
 from markdown import markdown
 from py4web import URL
 from .settings import Z_EXTERNAL_IMAGES, Z_INTERNAL_IMAGES
@@ -112,6 +113,57 @@ class ForumHelper:
             (db.channel_admin.is_active==True) &
             (db.channel_admin.user_id==user_id)).count() > 0
     
+    def is_channel_member(self, channel_id, user_id=None):
+        """ Given a channel that requires membership, return True if the
+        user is member of the channel, also return True if the user
+        is either a System Admin, or one of the channel's administratos
+        """
+        if user_id is None:
+            user_id = auth.get_user().get('id', None)
+            if user_id is None:
+                return False
+        membership = db(
+            (db.channel_membership.user_id==user_id) &
+            (db.channel_membership.channel_id==channel_id) &
+            (db.channel_membership.is_new_request==False)).select(
+                db.channel_membership.expires_on).first()
+        if not membership or (
+            membership and datetime.now() > membership.expires_on):
+            return False
+        return True
+    
+    def grant_channel_membership(self, channel_id, user_id=None):
+        """ Creates or updates a channel membership, returns True
+        if success, False otherwise
+        """
+        if user_id is None:
+            user_id = auth.get_user().get('id', None)
+            if user_id is None:
+                return False
+        new_exp = datetime.now() + timedelta(years=10)
+        # Update the expires on the table and use the combination of user and
+        # channel for uniqueness..
+        db.channel_membership.update_or_insert(
+            (db.channel_membership.user_id==user_id) &
+            (db.channel_membership,channel_id==channel_id),
+            expires_on=new_exp)
+        return True
+
+    def revoke_channel_membership(self, channel_id, user_id=None):
+        """ Creates or updates a channel membership """
+        if user_id is None:
+            user_id = auth.get_user().get('id', None)
+            if user_id is None:
+                return False
+        new_exp = datetime.now() + timedelta(years=-10)
+        # Update the expires on the table and use the combination of user and
+        # channel for uniqueness..
+        db.channel_membership.update_or_insert(
+            (db.channel_membership.user_id==user_id) &
+            (db.channel_membership,channel_id==channel_id),
+            expires_on=new_exp)
+        return True
+
     def get_member_property(self, prop, user_id=None):
         """ Reads the member value of a property """
         if user_id is None:
