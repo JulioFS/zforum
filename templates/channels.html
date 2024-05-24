@@ -23,7 +23,11 @@
       href="[[=URL('c/' + c['channel'].get('tag'))]]">/c/[[=c['channel'].get('tag')]]</a></h5>
     <div class="card-body">
       <h5 class="card-title">[[=XML(c['title_marked'], sanitize=True)]]</h5>
-      <p class="card-text">[[=XML(c['content_marked'], sanitize=True)]]</p>
+      <p class="card-text">
+        [[if c['channel']['is_private']:]]<p class="text-warning"><i>(Private Channel)</i></p>[[pass]]
+        [[if c['channel']['requires_membership']:]]<p class="text-warning"><i>(Requires membership)</i></p>[[pass]]
+        [[=XML(c['content_marked'], sanitize=True)]]
+      </p>
     </div>
   </div>
   [[pass]]

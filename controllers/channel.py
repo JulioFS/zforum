@@ -225,7 +225,7 @@ def channel_admin(channel_id):
 def channel_index(tag):
     """ Main Index for a channel """
     # Does it exist
-    channel = db(db.channel.tag == tag).select(db.channel.ALL).first()
+    channel = db(db.channel.tag==tag).select(db.channel.ALL).first()
     if channel:
         # Update the channel "views"
         channel.view += 1
@@ -238,6 +238,10 @@ def channel_index(tag):
         # TODO Handle considerations for private/membership channels
         is_private = channel.is_private
         requires_membership = channel.requires_membership
+        is_channel_member = False
+        if requires_membership:
+            # If membership is required, see if you are a member of the channel
+            is_channel_member = fh.is_channel_member(channel['id'])
         channel_banner = fh.retrieve_channel_banner(
             channel.id, channel.banner)
         channel_info = {
@@ -249,6 +253,7 @@ def channel_index(tag):
             'content_marked': markdown(channel.content),
             'banner': channel_banner,
             'is_private': is_private,
+            'is_channel_member': is_channel_member,
             'requires_membership': requires_membership,
             'can_admin_channel': can_admin_channel
         }
@@ -277,7 +282,11 @@ def channels():
     those channels with more topic views and upvotes should be moved higher,
     another option is to order by the last date any of its topics were 
     """
-    all_channels = db().select(db.channel.ALL, orderby=(
+    qry = db.channel.is_private == False
+    if fh.is_sysadmin():
+        # Don't hide private channels from sysadmins..
+        qry = db.channel.id > 0
+    all_channels = db(qry).select(db.channel.ALL, orderby=(
         ~db.channel.view | ~db.channel.modified_on))
     channel_list = []
     for c in all_channels:
