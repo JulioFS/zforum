@@ -26,13 +26,10 @@ Warning: Fixtures MUST be declared with @action.uses({fixtures})
 else your app will result in undefined behavior
 """
 
-import random
 from markdown import markdown
-from py4web import action, request, response, abort, redirect, URL
-from yatl.helpers import A
-from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
+from py4web import action, redirect, URL
+from ..common import db, session, T, auth
 from ..forumhelper import forumhelper as fh
-
 
 @action('c/<channel_tag>/topic/new', method=['get', 'post'])
 @action.uses('topic_new.html', auth, session, T)
