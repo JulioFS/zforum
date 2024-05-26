@@ -238,10 +238,10 @@ def channel_index(tag):
         # TODO Handle considerations for private/membership channels
         is_private = channel.is_private
         requires_membership = channel.requires_membership
-        is_channel_member = False
+        membership_status = {'has_membership': False, 'is_pending': False}
         if requires_membership:
             # If membership is required, see if you are a member of the channel
-            is_channel_member = fh.is_channel_member(channel['id'])
+            membership_status = fh.get_channel_membership(channel['id'])
         channel_banner = fh.retrieve_channel_banner(
             channel.id, channel.banner)
         channel_info = {
@@ -253,7 +253,9 @@ def channel_index(tag):
             'content_marked': markdown(channel.content),
             'banner': channel_banner,
             'is_private': is_private,
-            'is_channel_member': is_channel_member,
+            'is_channel_member': membership_status['has_membership'] and not \
+                membership_status['is_pending'],
+            'is_pending_membership': membership_status['is_pending'],
             'requires_membership': requires_membership,
             'can_admin_channel': can_admin_channel
         }
@@ -299,3 +301,28 @@ def channels():
         'channels': channel_list,
         'channel_desc': 'Available Channels.'
     }
+
+@action('channel/request_membership', method=['post'])
+@action.uses(auth)
+def request_membership():
+    """ Receives a request for channel membership optionally
+    passing a message to the administrator(s), redirect the user
+    back to index with action=req_membership to activate toaster
+    massage.
+    """
+    # Only auth users should ever hit this method
+    user = auth.get_user()
+    if user:
+        form = request.forms
+        channel_id = form.get('channel_id', None)
+        message = form.get('channel-request-reason', '')
+        if channel_id:
+            fh.request_channel_membership(channel_id, user['id'])
+            # TODO Create message to the channel admins
+            # when messaging system is completed.
+            #if message:
+
+        url = URL('index', vars={'action': 'req_membership'})
+    else:
+        url = URL('ex/unauthorized')
+    redirect(url)

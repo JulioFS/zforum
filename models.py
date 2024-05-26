@@ -228,19 +228,19 @@ if db(db.error_messages).isempty():
 if db(db.message_categories).isempty():
     categories = [
         {
-            'zfpm_display_order' : 1,
+            'display_order' : 1,
             'name' : 'Inbox'
         },
         {
-            'zfpm_display_order' : 2,
+            'display_order' : 2,
             'name' : 'Read'
         },
         {
-            'zfpm_display_order' : 3,
+            'display_order' : 3,
             'name' : 'Sent'
         },
         {
-            'zfpm_display_order' : 4,
+            'display_order' : 4,
             'name' : 'Trash'
         }
     ]

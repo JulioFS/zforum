@@ -7,8 +7,8 @@
 
 <!-- Add a block subnav_lead to override information -->
 
-<div class="toast-container position-fixed top-0 end-0 p-3">
-  <div id="toast-wrapper" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
+<div class="toast-container border-0 top-0 end-0 p-3 start-50 translate-middle-x">
+  <div id="toast-wrapper" class="toast text-bg-success" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="6000">
     <div class="toast-header">
       <strong class="me-auto">zForum Message</strong>
       <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -35,6 +35,9 @@
       msg = 'Your request for registration has been processed, ' +
       'you will shortly receive an email containing a link to verify your ' +
       'account.';
+    } else if (srch.indexOf('action=req_membership') >= 0) {
+      msg = 'Your request for membership has been submitted, ' +
+      'you will receive a notification when it is approved.';
     }
     if (msg.length > 0) {
       document.getElementById('toast-content').innerText = msg;

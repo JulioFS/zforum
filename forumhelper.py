@@ -113,30 +113,40 @@ class ForumHelper:
             (db.channel_admin.is_active==True) &
             (db.channel_admin.user_id==user_id)).count() > 0
     
-    def is_channel_member(self, channel_id, user_id=None):
+    def get_channel_membership(self, channel_id, user_id=None):
         """ Given a channel that requires membership, return True if the
         user is member of the channel, also return True if the user
         is either a System Admin, or one of the channel's administratos
+        returns {'has_membership': True/False, 'is_pending': True/False}
         """
-        has_membership = False
+        membership_state = {
+            'has_membership': False,
+            'is_pending': False,
+            'is_expired': False
+        }
         # If user_id not passed, get it from auth
         user_id = user_id or auth.get_user().get('id', None)
         if user_id:
             # Admins and Channel Admins are _always_ members..
             if self.is_sysadmin(user_id) or \
                 self.is_channel_admin(user_id, channel_id):
-                has_membership = True
+                membership_state['has_membership'] = True
             else:
                 # Valid user, but not admin,
                 # check if there is a membership record
                 membership = db(
                     (db.channel_membership.user_id==user_id) &
-                    (db.channel_membership.channel_id==channel_id) &
-                    (db.channel_membership.is_new_request==False)).select(
-                        db.channel_membership.expires_on).first()
-                if membership and (membership.expires_on >= datetime.now()):
-                    has_membership = True
-        return has_membership
+                    (db.channel_membership.channel_id==channel_id)).select(
+                        db.channel_membership.expires_on,
+                        db.channel_membership.is_new_request).first()
+                if membership and membership['is_new_request']:
+                    membership_state['has_membership'] = True
+                    membership_state['is_pending'] = True
+                elif membership and (membership.expires_on >= datetime.now()):
+                    membership_state['has_membership'] = True
+                elif membership and (membership.expires_on < datetime.now()):
+                    membership_state['is_expired'] = True
+        return membership_state
     
     def grant_channel_membership(self, channel_id, user_id=None):
         """ Creates or updates a channel membership, returns True
@@ -169,6 +179,19 @@ class ForumHelper:
                 expires_on=new_exp)
             revoked_membership = True
         return revoked_membership
+    
+    def request_channel_membership(self, channel_id, user_id=None):
+        """ Creates/updates a record in channel_membership que the 
+        request_flag set only. To grant/revoke actual membership, 
+        use the appropriate grant/revoke methods.
+        """
+        user_id = user_id or auth.get_user().get('id', None)
+        if user_id:
+            db.channel_membership.update_or_insert(
+                (db.channel_membership.user_id==user_id) &
+                (db.channel_membership,channel_id==channel_id),
+                is_new_request=True,
+                expires_on=None)
 
     def get_member_property(self, prop, user_id=None):
         """ Reads the member value of a property """
