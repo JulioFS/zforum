@@ -17,6 +17,8 @@ now = datetime.datetime.utcnow
 #   be ranked.
 # If channel requires_membership, it means that, regadless if it is_private
 #   the auth user will require membership to add/reply to topics.
+# Channel Banner:
+# settings[Z_EXTERNAL_IMAGES]/channels/[cid]/img.png
 db.define_table(
     'channel',
     Field('tag', type='string', length=64), # Must Index
@@ -192,10 +194,16 @@ db.commit()
 # Images will be stored in the filesystem, a hash will be
 # created to identity the location of the files (https://techfuel.net/story/3)
 # implemented in forumhelper.py
+# settings[Z_EXTERNAL_IMAGES]/users/[user_id]/[topic_id]/hash
+# metadata: json.loads('{"content-type": "image/jpeg", "size": "1700500"}')
+# System will allow up to 5 photos per post, (modifiable via system_setting) -
+# enforceable in code.
 db.define_table(
     'topic_image',
+    Field('user_id', 'reference auth_user'),
     Field('topic_id', 'reference topic'),
-    Field('image_hash', type='string', length=256, notnull=True)
+    Field('image_hash', type='string', length=256, notnull=True),
+    Field('metadata', type='string', length=512, notnull=True)
 )
 db.commit()
 
@@ -353,6 +361,18 @@ if db(db.system_setting).isempty():
                                'set by the PIPE Symbol (|).'),
             'value' : ('English (U.S.A):en_US|Spanish (México):es_MX|'
                        'Dutch (Nederlands):nl_NL|French (France):fr_FR')
+        },
+        {
+            'name' : 'zfsp_max_images_per_post',
+            'description' : ('Maximum number of images allowed by topic/'
+                             'response.'),
+            'value' : '5'
+        },
+        {
+            'name' : 'zfsp_max_image_size',
+            'description' : ('Largest size of each images allowed to upload '
+                             '(in bytes).'),
+            'value' : '5000000'
         }
     ]
 

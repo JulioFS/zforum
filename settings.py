@@ -15,7 +15,7 @@ APP_NAME = os.path.split(APP_FOLDER)[-1]
 # DB_FOLDER:    Sets the place where migration files will be created
 #               and is the store location for SQLite databases
 DB_FOLDER = required_folder(APP_FOLDER, 'databases')
-DB_URI = 'override-in-settings-private'
+DB_URI = 'sqlite://storage.db'
 DB_POOL_SIZE = 1
 # Understanding there is a lot of confusion about Database migrations, here's
 # My Take on it:
@@ -103,7 +103,7 @@ OAUTH2GITHUB_CLIENT_SECRET = None
 T_FOLDER = required_folder(APP_FOLDER, "translations")
 
 # Location of external images such as topic, posts, user images
-Z_EXTERNAL_IMAGES = '/home/julio/CodeRepo/py4web/apps/zforum/static/.ext_images'
+Z_EXTERNAL_IMAGES = '/Users/julio/CodeRepo/py4web/apps/zforum/static/.ext_images'
 # Internal Images is a symlink to Z_EXTERNAL_IMAGES insode static so
 # it can be used inside the context of http, use it like:
 # URL('static', Z_INTERNAL_IMAGES, 'channels', channel_name, etc)

@@ -19,7 +19,44 @@
 <!-- No buttons or content on right nav below subnav lead -->
 [[end]]
 
-<h3>New Topic</h3>
-<hr>
+<div class="container-fluid px-0">
+  <h3>New Topic</h3>
+  <hr>
+  <form method="post" action="[[=URL(f'c/{channel_info.get("tag")}/topic/new')]]" enctype="multipart/form-data">
+    <!-- Sections:
+      - New Topic Info (Title/Content)
+      - Available Image Placeholder
+    //-->
 
-<p>TODO</p>
+    <nav>
+      <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-main-tab" data-bs-toggle="tab" data-bs-target="#nav-details" type="button" role="tab" aria-controls="nav-details" aria-selected="true">Topic Details</button>
+        <button class="nav-link" id="nav-images-tab" data-bs-toggle="tab" data-bs-target="#nav-images" type="button" role="tab" aria-controls="nav-images" aria-selected="false">Upload Images</button>
+      </div>
+    </nav>
+    <div class="tab-content mb-4" id="nav-tab-content">
+      <div class="tab-pane fade show active my-4" id="nav-details" role="tabpanel" aria-labelledby="nav-details-tab" tabindex="0">
+        <!-- Main Form Here -->
+
+        <!-- Topic Title -->
+        <div class="mb-3">
+          <label for="topic_title" class="form-label">Title:</label>
+          <input type="text" class="form-control" id="topic-title" name="topic=-title" value="[[=request.forms.get('topic-title)', '')]]">
+        </div>
+
+        <!-- Topic Content -->
+        <div class="mb-3">
+          <label for="topic-content" class="form-label">Content:</label>
+          <textarea class="form-control" id="topic-content" name="topic-content" rows="10">[[=request.forms.get('topic-content)', '')]]</textarea>
+        </div>
+      </div>
+      <div class="tab-pane fade" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab" tabindex="0">
+        <p class="mt-4">Attach images in this section, images will appear in the order they were submitted.</p>
+        <hr>
+      </div>
+    </div>
+  </form>
+</div>
+
+<button type="submit" class="btn btn-primary" id="submit-topic" name="submit-topic">Create New Topic</button>
+<button type="submit" class="btn btn-primary" id="cancel-submit" name="cancel-submit">Cancel</button>

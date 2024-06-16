@@ -26,7 +26,7 @@ class ForumHelper:
         return db_prop.value if db_prop is not None else prop_default
 
     def _generate_filename_hash(self, fname):
-        """ Given a filename (fname), generate a relatively unique
+        """ Given a filename (fname), generate a safely unique
         salted hash value
         """
         return hashlib.md5(
