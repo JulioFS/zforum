@@ -9,11 +9,12 @@ import os
 from py4web.core import required_folder
 from dotenv import dotenv_values
 
-config = dotenv_values('.env')
-
 # db settings
 APP_FOLDER = os.path.dirname(__file__)
 APP_NAME = os.path.split(APP_FOLDER)[-1]
+
+config = dotenv_values(os.path.join(APP_FOLDER, '.env'))
+
 # Migration files will be created below and is the store location for SQLite databases
 DB_FOLDER = required_folder(APP_FOLDER, 'databases')
 DB_URI = 'sqlite://storage.db'
@@ -33,8 +34,16 @@ DB_POOL_SIZE = 1
 # On an existing project, where changes are performed (add, update) to the
 # model, it is best to delete the .table file(s) and set both to True
 # On production, both are False.
-DB_MIGRATE = config.get('DB_MIGRATE', False) # True if DB does not exist (no *.table files) (or changes to model)
-DB_FAKE_MIGRATE = config.get('DB_FAKE_MIGRATE', False)  # Mainly for rebuilding metadata
+DB_MIGRATE = config.get('DB_MIGRATE')
+DB_FAKE_MIGRATE = config.get('DB_FAKE_MIGRATE')
+if DB_MIGRATE is None:
+    DB_MIGRATE = False
+else:
+    DB_MIGRATE = True if DB_MIGRATE.lower() == 'true' else False
+if DB_FAKE_MIGRATE is None:
+    DB_FAKE_MIGRATE = False
+else:
+    DB_FAKE_MIGRATE = True if DB_FAKE_MIGRATE.lower() == 'true' else False
 
 # location where static files are stored:
 STATIC_FOLDER = required_folder(APP_FOLDER, "static")
