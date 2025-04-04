@@ -1,6 +1,5 @@
 ## Database Considerations
 ### channel
-
 Similar to a category, a channel is a container of topics and responses.
 
 Channels can be created by any authenticated user in the system. The user that created the channel becomes the _owner_ of the channel (effectively an administrator) and allows them to manage certain aspects of it:
@@ -16,4 +15,3 @@ Private channels are only available to the channel owner, other channel administ
 
 ### topic
 Topics will always be dependent on channels, topics can be locked (readonly) by the admins, and are editable by both admins and by their owner
-

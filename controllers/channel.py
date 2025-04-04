@@ -26,7 +26,7 @@ Warning: Fixtures MUST be declared with @action.uses({fixtures})
 else your app will result in undefined behavior
 """
 
-import os, random
+import os, random, re
 from better_profanity import profanity
 from markdown import markdown
 from py4web import action, request, response, abort, redirect, URL
@@ -49,6 +49,9 @@ def channel_new():
         if 'create-button' in form:
             # Even though a channel tag (name) can have any capitalization,
             # no channel  will have the same name.
+            # Tag Rules:
+            # Any letters, numbers, and any of the following: ()$_. allowed
+            tag_rules = re.compile(r'[a-zA-Z0-9()$_.]*$')
             tag = form.get('tag', '').strip() #.lower()
             title = form.get('title', '')
             content = form.get('content', '')
@@ -75,9 +78,12 @@ def channel_new():
             if not tag:
                 errors.append('Tag is required.')
             if not errors: # Only run a DB query if it is really needed.
-                if tag.find(' ') >= 0 or profanity.contains_profanity(tag):
-                    errors.append('Tag is required, must not contain spaces, '
-                                  'curse word(s), or invalid name.')
+                if tag_rules.match(tag) is None or \
+                    profanity.contains_profanity(tag):
+                    errors.append(
+                        'Tag is invalid, only letters, numbers, and a '
+                        'combination of any of ()$_. characters are allowed, '
+                        'and must not contain curse word(s).')
                 else:
                     # Does the tag exist?
                     tag_exists = db(

@@ -32,7 +32,6 @@ from ..common import db, session, T, cache, auth, logger, groups
 from ..forumhelper import forumhelper as fh
 from pydal.validators import CRYPT
 
-
 @action('zauth/login', method=['get', 'post'])
 @action.uses('login.html', auth)
 def auth_login():
@@ -98,7 +97,7 @@ def auth_regisrer():
         if len(errors) > 0:
             error += ''.join(errors) + '</ul>'
         else:
-            registration_results = auth.register(payload)
+            registration_results = auth.register(payload, validate=False)
             if 'errors' in registration_results and len(
                 registration_results['errors'].keys()) > 0:
                 for err in registration_results['errors'].values():
