@@ -41,7 +41,7 @@
         <!-- Topic Title -->
         <div class="mb-3">
           <label for="topic_title" class="form-label">Title:</label>
-          <input type="text" class="form-control" id="topic-title" name="topic=-title" value="[[=request.forms.get('topic-title)', '')]]">
+          <input type="text" class="form-control" id="topic-title" name="topic-title" value="[[=request.forms.get('topic-title)', '')]]">
         </div>
 
         <!-- Topic Content -->
@@ -50,13 +50,20 @@
           <textarea class="form-control" id="topic-content" name="topic-content" rows="10">[[=request.forms.get('topic-content)', '')]]</textarea>
         </div>
       </div>
-      <div class="tab-pane fade" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab" tabindex="0">
-        <p class="mt-4">Attach images in this section, images will appear in the order they were submitted.</p>
+      <div class="tab-pane fade my-4" id="nav-images" role="tabpanel" aria-labelledby="nav-images-tab" tabindex="0">
+        <div class="mb-4">
+          <label for="topic-images" class="form-label">Images:</label>
+          <input class="form-control" type="file" id="topic-images" name="topic-images" aria-describedby="banner-help" multiple>
+          <div id="banner-help" class="form-text">Add images in this section. This 
+            value is optional.
+          </div>
+        </div>
         <hr>
       </div>
     </div>
+    <div class="container">
+      <button type="submit" class="btn btn-primary" id="submit-topic" name="submit-topic">Create New Topic</button>
+      <button type="submit" class="btn btn-primary" id="cancel-submit" name="cancel-submit">Cancel</button>
+    </div>
   </form>
 </div>
-
-<button type="submit" class="btn btn-primary" id="submit-topic" name="submit-topic">Create New Topic</button>
-<button type="submit" class="btn btn-primary" id="cancel-submit" name="cancel-submit">Cancel</button>
