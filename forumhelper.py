@@ -92,6 +92,12 @@ class ForumHelper:
         payload.save(fn, overwrite=True)
 
 
+    def store_topic_images(self, topic_id, payload):
+        """ Retrieves a collection of images to add to a specific topic """
+        # Image payload received as a collection of:
+        # # <ombott.request_pkg.helpers.FileUpload object at 0x107ecfc40>
+        
+
     def is_sysadmin(self, user_id=None):
         """ Returns true if the user is in the Managers group,
         (See common.py for the definition of the groups table)

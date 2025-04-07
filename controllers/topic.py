@@ -64,6 +64,15 @@ def new_topic(channel_tag):
                 t_title = form.get('topic-title', '')
                 t_content = form.get('topic-content', '')
                 t_images = request.files.get('topic-images', None)
+                # Create the topic
+                topic_id = db.topic.insert(
+                    is_parent = True,
+                    title = t_title,
+                    content = t_content,
+                    created_by = user['id'],
+                    modified_by = user['id']
+                )
+                # TODO insert images
             redirect(URL(f'c/{channel.tag}'))
         else:
             redirect(URL('ex/unauthorized'))

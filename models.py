@@ -90,9 +90,9 @@ db.define_table(
     Field('is_promoted', type='boolean', default=False), # Top of the channel
     Field('is_parent', type='boolean', required=True),
     # if is_system==True, display on main page
-    Field('is_system_', type='boolean'),
-    Field('view', type='integer'),
-    Field('upvote', type='integer'),
+    Field('is_system', type='boolean', default=False),
+    Field('view', type='integer', default=0),
+    Field('upvote', type='integer', default=0),
     Field('parent_id', type='integer'),
     Field('created_on', type='datetime', default=now),
     Field('modified_on', type='datetime', default=now, update=now),
@@ -192,7 +192,7 @@ db.define_table(
 db.commit()
 
 # Images will be stored in the filesystem, a hash will be
-# created to identity the location of the files (https://techfuel.net/story/3)
+# created to identify the location of the files (https://techfuel.net/story/3)
 # implemented in forumhelper.py
 # settings[Z_EXTERNAL_IMAGES]/users/[user_id]/[topic_id]/hash
 # metadata: json.loads('{"content-type": "image/jpeg", "size": "1700500"}')
