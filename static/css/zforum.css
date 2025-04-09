@@ -44,3 +44,13 @@ html {
 .zforum-h-150 {
   height: 150px !important;
 }
+
+#thumbnail-container img {
+  width:100px;
+  height:100px;
+  margin:5px;
+}
+
+canvas {
+  border:1px solid red;
+}
