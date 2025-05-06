@@ -30,7 +30,7 @@ import os, random, re
 from better_profanity import profanity
 from markdown import markdown
 from py4web import action, request, response, abort, redirect, URL
-from yatl.helpers import A
+from yatl.helpers import A, XML
 from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
 from ..forumhelper import forumhelper as fh
 from ..settings import Z_EXTERNAL_IMAGES, Z_INTERNAL_IMAGES
@@ -254,9 +254,9 @@ def channel_index(tag):
             'id': str(channel.id),
             'tag': channel.tag,
             'title': channel.title,
-            'title_marked': markdown(channel.title),
+            'title_marked': markdown(XML(channel.title, sanitize=True).xml()),
             'content': channel.content,
-            'content_marked': markdown(channel.content),
+            'content_marked': markdown(XML(channel.content, sanitize=True).xml()),
             'banner': channel_banner,
             'is_private': is_private,
             'is_channel_member': membership_status['has_membership'] and not \
