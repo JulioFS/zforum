@@ -34,7 +34,7 @@
             <a class="nav-link active" aria-current="page" href="[[=URL('index')]]">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="[[=URL('channels')]]">Channels</a>
+            <a class="nav-link" href="[[=URL('channel/all')]]">Channels</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="[[=URL('index')]]">Sponsors</a>
@@ -112,7 +112,7 @@
           page are those ranked higher by the community, however you may sort by newest
           instead if you wish.
         </p>
-        <a href="[[=URL('channels')]]">
+        <a href="[[=URL('channel/all')]]">
           View All Channels
           <i class="bi bi-chevron-right"></i>
         </a>
@@ -121,7 +121,7 @@
         <div class="d-grid gap-2 mt-4">
           [[block page_sidebar]]
             [[if globals().get('user'):]]
-              <a class="btn btn-primary" href="[[=URL('channel_new')]]" role="button">New Channel</a>
+              <a class="btn btn-primary" href="[[=URL('channel/new')]]" role="button">New Channel</a>
             [[pass]]
           [[end]]
         </div>

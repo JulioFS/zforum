@@ -35,8 +35,8 @@ from ..common import db, session, T, cache, auth, logger, authenticated, unauthe
 from ..forumhelper import forumhelper as fh
 from ..settings import Z_EXTERNAL_IMAGES, Z_INTERNAL_IMAGES
 
-@action('channel_new', method=['get', 'post'])
-@action.uses('channel_new.html', auth, T)
+@action('channel/new', method=['get', 'post'])
+@action.uses('channel/new.html', auth, T)
 def channel_new():
     """ New Channel Page - Authenticated Users """
     errors = []
@@ -117,7 +117,7 @@ def channel_new():
 
 # Admin a channel
 @action('channel/admin/<channel_id>', method=['get', 'post'])
-@action.uses('channel_admin.html', auth, T)
+@action.uses('channel/admin.html', auth, T)
 def channel_admin(channel_id):
     """ Channel Administration via Sys Admin Or Channel Admin """
     errors = []
@@ -227,7 +227,7 @@ def channel_admin(channel_id):
 
 # Main Channel Index
 @action('c/<tag>')
-@action.uses('channel_index.html', auth, T)
+@action.uses('channel/index.html', auth, T)
 def channel_index(tag):
     """ Main Index for a channel """
     # Does it exist
@@ -278,8 +278,8 @@ def channel_action(tag, channel_action):
     """ GET actions for channel """
     redirect(URL(f'c/{tag}', vars={'subscribed': 'true'}))
 
-@action('channels')
-@action.uses('channels.html', auth, T)
+@action('channel/all')
+@action.uses('channel/all.html', auth, T)
 def channels():
     """ Retrieves all channels that the user is allowed to
     access, channels that are returned are those in which:
