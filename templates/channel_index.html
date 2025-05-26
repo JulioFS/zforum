@@ -5,7 +5,7 @@
 [[if channel_info['banner']:]]style="background-size:cover;background-repeat:no-repeat;background-image:url('[[=channel_info['banner']]]');"[[pass]]>
   <div class="col zforum-h-150 text-light">
     <h3><div class="m-2 p-2">/c/[[=channel_info['tag']]]</div></h3>
-    <p>[[=XML(channel_info['title_marked'], sanitize=True)]]</p>
+    <div>[[=XML(channel_info['title_marked'])]]</div>
   </div>
 </div>
 [[end]]
@@ -22,7 +22,7 @@
 
 [[block subnav_lead]]
 <h3 class="fs-2">[[=channel_info['tag']]]</h3>
-<p>[[=XML(channel_info['content_marked'], sanitize=True)]]</p>
+<div>[[=XML(channel_info['content_marked'])]]</dic>
 [[end]]
 
 [[if channel_info.get('requires_membership', False) and not channel_info.get('is_channel_member', False):]]
