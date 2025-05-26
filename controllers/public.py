@@ -34,7 +34,7 @@ from ..forumhelper import forumhelper as fh
 
 
 @action('index')
-@action.uses('index.html', auth, db, session, T)
+@action.uses('pub/index.html', auth, db, session, T)
 def index():
     """ /index entry point """
     #groups.add(1, 'manager')
@@ -49,7 +49,7 @@ def index():
     return payload
 
 @action('ex/<err>')
-@action.uses('exception.html')
+@action.uses('pub/exception.html')
 def exception(err):
     """ Handles handled exceptions (controlled) """
     default_error = f'Unknown Exception: ${err}'

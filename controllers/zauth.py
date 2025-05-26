@@ -33,7 +33,7 @@ from ..forumhelper import forumhelper as fh
 from pydal.validators import CRYPT
 
 @action('zauth/login', method=['get', 'post'])
-@action.uses('login.html', auth)
+@action.uses('zauth/login.html', auth)
 def auth_login():
     """ Custom Login Page """
     req = request
@@ -62,7 +62,7 @@ def auth_login():
     return redirect(URL('index'))
 
 @action('zauth/register', method=['get', 'post'])
-@action.uses('register.html')
+@action.uses('zauth/register.html')
 def auth_regisrer():
     """ Register override """
     req = request
@@ -109,7 +109,7 @@ def auth_regisrer():
     return redirect(URL('index', vars={'action': '' if is_cancel else 'reg'}))
 
 @action('zauth/request_reset_password', method=['get', 'post'])
-@action.uses('reset.html', auth)
+@action.uses('zauth/reset.html', auth)
 def auth_request_reset_password():
     """ Custom Request Password Reset """
     req = request
@@ -132,7 +132,7 @@ def auth_request_reset_password():
 
 @action('zauth/profile/<user_id>', method=['get', 'post'])
 @action('zauth/profile', method=['get', 'post'])
-@action.uses('profile.html', auth, db, session, T)
+@action.uses('zauth/profile.html', auth, db, session, T)
 def profile(user_id=None):
     """ Main user profile, not entirely similar to OOB """
     errors = []
@@ -252,7 +252,7 @@ def profile(user_id=None):
     }
 
 @action('zauth/system_admin', method=['get', 'post'])
-@action.uses('system_admin.html', auth, db, session, T)
+@action.uses('zauth/system_admin.html', auth, db, session, T)
 def system_admin():
     """ System Administration Page """
     errors = {}

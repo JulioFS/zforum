@@ -32,7 +32,7 @@ from ..common import db, session, T, auth
 from ..forumhelper import forumhelper as fh
 
 @action('c/<channel_tag>/topic/new', method=['get', 'post'])
-@action.uses('topic_new.html', auth, session, T)
+@action.uses('topic/new.html', auth, session, T)
 def new_topic(channel_tag):
     """ New Topic form, only allowed if the user is authenticated,
     and either The channel is public
