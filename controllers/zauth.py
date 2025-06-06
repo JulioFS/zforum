@@ -50,7 +50,8 @@ def auth_login():
             error = 'Both email and password must be supplied.'
         else:
             user, error = auth.login(email, passwd)
-            # from auth.py
+            # from auth.py, updates the session with the authorized user
+            # and acts as a de-facto login
             if user:
                 auth.store_user_in_session(user['id'])
 
