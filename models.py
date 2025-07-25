@@ -6,7 +6,9 @@ import datetime
 #from pydal.validators import *
 from .common import db, Field
 
-now = datetime.datetime.utcnow
+#now = datetime.datetime.utcnow
+def now():
+    return datetime.datetime.now(datetime.timezone.utc)
 
 # Rank: A measurement of how "important" the channel is for display
 # Rank = channel views (15%) + topics in it (50%) + responses to topics (35%)
