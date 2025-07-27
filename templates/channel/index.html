@@ -56,9 +56,26 @@
 
 [[else:]]
   [[if topics:]]
-    Yes Topics
+    <h4>Topics</h4>
+    <hr>
+    [[for topic in topics:]]
+      <div class="card w-100 mb-3">
+        <div class="card-header">
+          [[=topic.title]]
+        </div>
+        <div class="card-body">
+          <div><a href="" title="" class="link-warning">/u/[[=topic.created_by]]</a></div>
+          <p class="card-text">[[=XML(topic.content)]]</p>
+        </div>
+      </div>
+    [[pass]]
   [[else:]]
+    <h4>Topics</h4>
+    <hr>
     <p><i>The excit'ment shall beginneth after thee start to writeth!</i></p>
+    [[if not 'id' in user:]]
+      <p><a href="[[=URL('zauth', 'login')]]" title="Login to add posts.">Login</a> to Post.</p>
+    [[pass]]
   [[pass]]
 [[pass]]
 

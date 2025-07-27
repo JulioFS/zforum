@@ -256,7 +256,8 @@ def channel_index(tag):
             'title': channel.title,
             'title_marked': markdown(XML(channel.title, sanitize=True).xml()),
             'content': channel.content,
-            'content_marked': markdown(XML(channel.content, sanitize=True).xml()),
+            'content_marked': markdown(
+                XML(channel.content, sanitize=True).xml()),
             'banner': channel_banner,
             'is_private': is_private,
             'is_channel_member': membership_status['has_membership'] and not \
@@ -265,10 +266,14 @@ def channel_index(tag):
             'requires_membership': requires_membership,
             'can_admin_channel': can_admin_channel
         }
+        topic_qry = db.topic.channel_id == channel.id
+        topic_qry &= db.topic.is_parent == True
+        topics = db(topic_qry).select(
+            db.topic.ALL, orderby=db.topic.is_promoted|~db.topic.modified_on)
         payload = {
             'tag': tag,
             'channel_info': channel_info,
-            'topics': []
+            'topics': topics
         }
         return payload
     return redirect(URL('ex/tagnotfound'))

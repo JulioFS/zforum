@@ -67,6 +67,7 @@ def new_topic(channel_tag):
                 # Create the topic
                 topic_id = db.topic.insert(
                     is_parent = True,
+                    channel_id=channel.id,
                     title = t_title,
                     content = t_content,
                     created_by = user['id'],

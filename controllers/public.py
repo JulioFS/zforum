@@ -43,8 +43,7 @@ def index():
     is_systemadmin = fh.is_sysadmin()
     payload = {
         'channel_desc': channel_desc,
-        'is_systemadmin': is_systemadmin,
-        'vergonio': 'YES'
+        'is_systemadmin': is_systemadmin
     }
     return payload
 
