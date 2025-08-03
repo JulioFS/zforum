@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from markdown import markdown
 from py4web import URL
 from .settings import Z_EXTERNAL_IMAGES, Z_INTERNAL_IMAGES
-from .common import db, groups, auth
+from .common import db, groups, auth, session
 
 # Use imghdr (imghdr.what(fname[,stream])) to find out image type
 
@@ -280,6 +280,29 @@ class ForumHelper:
                     'description': prop.description,
                     'value': user_prop_map.get(prop.id, prop.value)}})
         return all_props
+
+    def get_user_info(self, user_id=None):
+        """
+        Compiles basic user information to be used on header/footer
+        or other areas of the system, primarily information once the
+        user is logged in.
+        """
+        session_info = {}
+        if user_id is None:
+            user_id = auth.get_user().get('id', None)
+        if user_id:
+            # Only mess with the info gathering if there is an auth user
+            # Add some basic relevant user information to be available
+            # on different parts of the system:
+            session_info = {
+                'zf_is_admin': self.is_sysadmin(user_id),
+                'zf_profile_name': self.get_member_property(
+                    'zfmp_display_name', user_id),
+                'zf_email': auth.get_user().get('email')
+            }
+            session_info['zf_display_name'] = session_info[
+                'zf_profile_name'] or session_info['zf_email']
+        return session_info
 
 # Expose a single instance
 forumhelper = ForumHelper()

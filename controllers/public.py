@@ -26,29 +26,28 @@ Warning: Fixtures MUST be declared with @action.uses({fixtures})
 else your app will result in undefined behavior
 """
 
-import random
-from py4web import action, request, response, abort, redirect, URL
-from yatl.helpers import A
-from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
+from markdown import markdown
+from py4web import action
+from ..common import db, session, auth
 from ..forumhelper import forumhelper as fh
 
 
 @action('index')
-@action.uses('pub/index.html', auth, db, session, T)
+@action.uses('pub/index.html', auth, session)
 def index():
     """ /index entry point """
     #groups.add(1, 'manager')
     #user = auth.get_user()
     channel_desc = fh.get_system_property('zfss_header_html', '')
-    is_systemadmin = fh.is_sysadmin()
+    user_info = fh.get_user_info()
     payload = {
-        'channel_desc': channel_desc,
-        'is_systemadmin': is_systemadmin
+        'channel_desc': markdown(channel_desc),
+        'user_info': user_info
     }
     return payload
 
 @action('ex/<err>')
-@action.uses('pub/exception.html')
+@action.uses('pub/exception.html', db)
 def exception(err):
     """ Handles handled exceptions (controlled) """
     default_error = f'Unknown Exception: ${err}'

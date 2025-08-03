@@ -27,13 +27,13 @@ else your app will result in undefined behavior
 """
 
 import random
-from py4web import action, request, response, abort, redirect, URL
-from ..common import db, session, T, cache, auth, logger, groups
+from py4web import action, request, redirect, URL
+from ..common import db, session, T, auth
 from ..forumhelper import forumhelper as fh
 from pydal.validators import CRYPT
 
 @action('zauth/login', method=['get', 'post'])
-@action.uses('zauth/login.html', auth)
+@action.uses('zauth/login.html', auth, session)
 def auth_login():
     """ Custom Login Page """
     req = request

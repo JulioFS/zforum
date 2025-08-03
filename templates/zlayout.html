@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en" data-bs-theme="dark">
-
 <head>
   <base href="[[=URL('static')]]/">
   <meta charset="utf-8">
@@ -46,27 +45,32 @@
             <a class="nav-link" href="[[=URL('index')]]">About</a>
           </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-person-circle"></i> User Options
+            <a class="nav-link dropdown-toggle"
+               href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+                [[=globals().get('user_info', {}).get('zf_display_name', '') or 'Login Options']]
             </a>
             <ul class="dropdown-menu">
-              [[if globals().get('user'):]]
-              <li><a class="dropdown-item" disabled>[[=globals().get('user').get('email')]]</a></li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-              <!-- If system detects user already logged in, allow profile: -->
-              <li><a class="dropdown-item" href="[[=URL('zauth/profile')]]">My Profile</a></li>
-              [[if 'change_password' in globals().get('actions', {}).get('allowed_actions', {}):]]
-              <li><a class="dropdown-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
-              [[pass]]
-              [[if globals().get('is_systemadmin', False):]]
-              <li><a class="dropdown-item" href="[[=URL('zauth/system_admin')]]">System Admin</a></li>
-              [[pass]]
-              <li><a class="dropdown-item" href="[[=URL('auth/logout')]]">Logout</a></li>
+              [[if 'user' in globals() and globals().get('user'):]]
+                <!--
+                <li><a class="dropdown-item" disabled>[[=globals().get('user').get('email')]]</a></li>
+                <li>
+                  <hr class="dropdown-divider" />
+                </li>
+                //-->
+                <!-- If system detects user already logged in, allow profile: -->
+                <li><a class="dropdown-item" href="[[=URL('zauth/profile')]]">My Profile</a></li>
+                [[if 'change_password' in globals().get('actions', {}).get('allowed_actions', {}):]]
+                  <li><a class="dropdown-item" href="[[=URL('auth/change_password')]]">Change Password</a></li>
+                [[pass]]
+                [[if globals().get('user_info', {}).get('zf_is_admin', False):]]
+                  <li><a class="dropdown-item" href="[[=URL('zauth/system_admin')]]">System Admin</a></li>
+                [[pass]]
+                <li><a class="dropdown-item" href="[[=URL('auth/logout')]]">Logout</a></li>
               [[else:]]
-              <li><a class="dropdown-item" href="[[=URL('zauth/login')]]">Log In</a></li>
-              <li><a class="dropdown-item" href="[[=URL('zauth/register')]]">New Account</a></li>
+                <li><a class="dropdown-item" href="[[=URL('zauth/login')]]">Log In</a></li>
+                <li><a class="dropdown-item" href="[[=URL('zauth/register')]]">New Account</a></li>
               [[pass]]
             </ul>
           </li>
