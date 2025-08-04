@@ -73,7 +73,7 @@ def new_topic(channel_tag):
                     created_by = user['id'],
                     modified_by = user['id']
                 )
-                # TODO insert images
+                fh.add_topic_images(topic_id, t_images)
             redirect(URL(f'c/{channel.tag}'))
         else:
             redirect(URL('ex/unauthorized'))
