@@ -3,10 +3,12 @@ zForum database model.
 """
 
 import datetime
-#from pydal.validators import *
 from .common import db, Field
 
-#now = datetime.datetime.utcnow
+REF_AUTH_USER = 'reference auth_user'
+REF_CHANNEL = 'reference_chanel'
+REF_TOPIC = 'reference topic'
+
 def now():
     return datetime.datetime.now(datetime.timezone.utc)
 
@@ -29,9 +31,9 @@ db.define_table(
     Field('content', type='text'),
     Field('view', type='integer', default=0),
     Field('rank', type='decimal(10,2)', default=0.0),
-    Field('created_by', 'reference auth_user'),
+    Field('created_by', REF_AUTH_USER),
     Field('created_on', type='datetime', default=now),
-    Field('modified_by', 'reference auth_user' ),
+    Field('modified_by', REF_AUTH_USER ),
     Field('modified_on', type='datetime', default=now, update=now),
     Field('is_private', type='boolean', default=False),
     Field('requires_membership', type='boolean', default=False),
@@ -45,13 +47,13 @@ db.commit()
 # a membership to the channel admin
 db.define_table(
     'channel_membership',
-    Field('user_id', 'reference auth_user'),
-    Field('channel_id', 'reference channel'),
+    Field('user_id', REF_AUTH_USER),
+    Field('channel_id', REF_CHANNEL),
     Field('is_new_request', type='boolean', default=True),
     Field('expires_on', type='datetime'),
-    Field('created_by', 'reference auth_user'),
+    Field('created_by', REF_AUTH_USER),
     Field('created_on', type='datetime', default=now),
-    Field('modified_by', 'reference auth_user' ),
+    Field('modified_by', REF_AUTH_USER ),
     Field('modified_on', type='datetime', default=now, update=now)
 )
 db.commit()
@@ -61,18 +63,18 @@ db.commit()
 # posts in the channel if it requires_membership
 db.define_table(
     'channel_subscription',
-    Field('channel_id', 'reference channel'),
-    Field('user_id', 'reference auth_user'),
+    Field('channel_id', REF_CHANNEL),
+    Field('user_id', REF_AUTH_USER),
     Field('is_active', type='boolean', default=True),
-    Field('created_by', 'reference auth_user'),
+    Field('created_by', REF_AUTH_USER),
     Field('created_on', type='datetime', default=now)
 )
 db.commit()
 
 db.define_table(
     'channel_admin',
-    Field('user_id', 'reference auth_user'),
-    Field('channel_id', 'reference channel'),
+    Field('user_id', REF_AUTH_USER),
+    Field('channel_id', REF_CHANNEL),
     Field('is_active', type='boolean', default=True)
 )
 db.commit()
@@ -82,7 +84,7 @@ db.commit()
 # identifying (a) being a child, and (b) of which main topic
 db.define_table(
     'topic',
-    Field('channel_id', 'reference channel'),
+    Field('channel_id', REF_CHANNEL),
     # Title is not required for topic responses, enforce in code/UI
     Field('title', type='string', length=128),
     Field('content', type='text', required=True),
@@ -98,8 +100,8 @@ db.define_table(
     Field('parent_id', type='integer'),
     Field('created_on', type='datetime', default=now),
     Field('modified_on', type='datetime', default=now, update=now),
-    Field('created_by', 'reference auth_user'),
-    Field('modified_by', 'reference auth_user')
+    Field('created_by', REF_AUTH_USER),
+    Field('modified_by', REF_AUTH_USER)
 )
 db.commit()
 
@@ -114,8 +116,8 @@ db.define_table(
     'message',
     Field('category_id', 'reference message_categories'),
     Field('is_read', type='boolean', default=False),
-    Field('user_id', 'reference auth_user'),
-    Field('from_user_id', 'reference auth_user'),
+    Field('user_id', REF_AUTH_USER),
+    Field('from_user_id', REF_AUTH_USER),
     Field('subject', type='string', length=128, required=True),
     Field('message', type='text', required=True),
     Field('created_on', type='datetime', default=now)
@@ -140,16 +142,16 @@ db.commit()
 
 db.define_table(
     'inappropriate_topic',
-    Field('topic_id', 'reference topic'),
+    Field('topic_id', REF_TOPIC),
     Field('created_on', type='datetime', default=now),
-    Field('created_by', 'reference auth_user')
+    Field('created_by', REF_AUTH_USER)
 )
 db.commit()
 
 db.define_table(
     'subscription',
-    Field('user_id', 'reference auth_user'),
-    Field('topic_id', 'reference topic'),
+    Field('user_id', REF_AUTH_USER),
+    Field('topic_id', REF_TOPIC),
     Field('is_active', type='boolean', default=True)
 )
 db.commit()
@@ -171,7 +173,7 @@ db.commit()
 
 db.define_table(
     'member_setting',
-    Field('user_id', 'reference auth_user'),
+    Field('user_id', REF_AUTH_USER),
     Field('template_id', 'reference member_setting_template'),
     Field('value', type='text', length=128)
 )
@@ -179,7 +181,7 @@ db.commit()
 
 db.define_table(
     'member_avatar',
-    Field('user_id', 'reference auth_user'),
+    Field('user_id', REF_AUTH_USER),
     Field('avatar', type='text'),
     Field('content_type', type='string', length=128)
 )
@@ -202,8 +204,8 @@ db.commit()
 # enforceable in code.
 db.define_table(
     'topic_image',
-    Field('user_id', 'reference auth_user'),
-    Field('topic_id', 'reference topic'),
+    Field('user_id', REF_AUTH_USER),
+    Field('topic_id', REF_TOPIC),
     Field('image_hash', type='string', length=256, notnull=True),
     Field('metadata', type='string', length=512, notnull=True)
 )

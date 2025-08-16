@@ -31,7 +31,7 @@ from better_profanity import profanity
 from markdown import markdown
 from py4web import action, request, response, abort, redirect, URL
 from yatl.helpers import A, XML
-from ..common import db, session, T, cache, auth, logger, authenticated, unauthenticated, groups
+from ..common import db, T, auth
 from ..forumhelper import forumhelper as fh
 from ..settings import Z_EXTERNAL_IMAGES, Z_INTERNAL_IMAGES
 

@@ -166,7 +166,8 @@ class ForumHelper:
             # channel for uniqueness..
             db.channel_membership.update_or_insert(
                 (db.channel_membership.user_id==user_id) &
-                (db.channel_membership,channel_id==channel_id),
+                (db.channel_membership,
+                 db.channel_membership.channel_id==channel_id),
                 expires_on=new_exp)
             granted_membership = True
         return granted_membership
@@ -181,7 +182,8 @@ class ForumHelper:
             # channel for uniqueness..
             db.channel_membership.update_or_insert(
                 (db.channel_membership.user_id==user_id) &
-                (db.channel_membership,channel_id==channel_id),
+                (db.channel_membership,
+                 db.channel_membership.channel_id==channel_id),
                 expires_on=new_exp)
             revoked_membership = True
         return revoked_membership
@@ -195,7 +197,8 @@ class ForumHelper:
         if user_id:
             db.channel_membership.update_or_insert(
                 (db.channel_membership.user_id==user_id) &
-                (db.channel_membership,channel_id==channel_id),
+                (db.channel_membership,
+                 db.channel_membership.channel_id==channel_id),
                 is_new_request=True,
                 expires_on=None)
 
