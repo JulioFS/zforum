@@ -306,6 +306,10 @@ class ForumHelper:
             session_info['zf_display_name'] = session_info[
                 'zf_profile_name'] or session_info['zf_email']
         return session_info
+    
+    def add_topic_images(self, topic_id, images):
+        if images:
+            x = 1
 
 # Expose a single instance
 forumhelper = ForumHelper()
