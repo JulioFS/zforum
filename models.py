@@ -6,7 +6,7 @@ import datetime
 from .common import db, Field
 
 REF_AUTH_USER = 'reference auth_user'
-REF_CHANNEL = 'reference_chanel'
+REF_CHANNEL = 'reference channel'
 REF_TOPIC = 'reference topic'
 
 def now():

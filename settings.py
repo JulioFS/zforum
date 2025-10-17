@@ -66,9 +66,9 @@ ALLOWED_ACTIONS = ["all"]
 
 # email settings
 SMTP_SSL = False
-SMTP_SERVER = config.get('SMTP_SERVER', 'smtp.gmail.com:587')
-SMTP_SENDER = config.get('SMTP_SENDER', 'julio@techfuel.net')
-SMTP_LOGIN = config.get('SMTP_LOGIN', 'julio@techfuel.net:xxxx xxxx xxxx xxxx')
+SMTP_SERVER = None #config.get('SMTP_SERVER', 'smtp.gmail.com:587')
+SMTP_SENDER = None #config.get('SMTP_SENDER', 'julio@techfuel.net')
+SMTP_LOGIN = None #config.get('SMTP_LOGIN', 'julio@techfuel.net:xxxx xxxx xxxx xxxx')
 SMTP_TLS = True
 
 # session settings

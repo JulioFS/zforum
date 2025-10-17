@@ -269,7 +269,11 @@ def channel_index(tag):
         topic_qry = db.topic.channel_id == channel.id
         topic_qry &= db.topic.is_parent == True
         topics = db(topic_qry).select(
-            db.topic.ALL, orderby=db.topic.is_promoted|~db.topic.modified_on)
+            db.topic.title,
+            db.topic.content,
+            db.auth_user.username,
+            left=db.auth_user.on(db.topic.created_by == db.auth_user.id),
+            orderby=db.topic.is_promoted|~db.topic.modified_on)
         payload = {
             'tag': tag,
             'channel_info': channel_info,

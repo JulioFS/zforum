@@ -64,7 +64,7 @@ def auth_login():
 
 @action('zauth/register', method=['get', 'post'])
 @action.uses('zauth/register.html')
-def auth_regisrer():
+def auth_register():
     """ Register override """
     req = request
     errors = []

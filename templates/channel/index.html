@@ -60,12 +60,12 @@
     <hr>
     [[for topic in topics:]]
       <div class="card w-100 mb-3">
-        <div class="card-header">
-          [[=topic.title]]
-        </div>
+        <h4 class="card-header">
+          <a href="#" title="" class="text-decoration-none">[[=topic.topic.title]]</a>
+        </h4>
         <div class="card-body">
-          <div><a href="" title="" class="link-warning">/u/[[=topic.created_by]]</a></div>
-          <p class="card-text">[[=XML(topic.content)]]</p>
+          <div><a href="" title="" class="link-warning link-underline-opacity-50">/u/[[=topic.auth_user.username]]</a></div>
+          <p class="card-text">[[=XML(topic.topic.content)]]</p>
         </div>
       </div>
     [[pass]]
