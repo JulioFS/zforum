@@ -4,6 +4,7 @@
 - markdown
 - python-dotenv
 - better_profanity
+- faker
 
 ### Create User
 ### Make Non-Admin user Admin
