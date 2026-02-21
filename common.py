@@ -8,7 +8,7 @@ import logging
 from pydal.tools.tags import Tags
 from py4web import Session, Cache, Translator, DAL, Field
 from py4web.utils.mailer import Mailer
-from py4web.utils.auth import Auth
+from py4web.utils.auth import Auth, SimpleTokenPlugin
 from py4web.utils.factories import ActionFactory
 from . import settings
 
@@ -36,9 +36,7 @@ db = DAL(
     settings.DB_URI,
     folder=settings.DB_FOLDER,
     pool_size=settings.DB_POOL_SIZE,
-    #fake_migrate_all=True,
-    migrate=settings.DB_MIGRATE,
-    fake_migrate=settings.DB_FAKE_MIGRATE
+    migrate=settings.DB_MIGRATE
 )
 
 # #######################################################
@@ -72,6 +70,10 @@ auth.param.block_previous_password_num = 3
 auth.param.default_login_enabled = settings.DEFAULT_LOGIN_ENABLED
 auth.define_tables()
 auth.fix_actions()
+
+# Allow API token (MUST be added after auth.define_tables() - Ask Massimo
+simple_token_plugin = SimpleTokenPlugin(auth)
+auth.token_plugins.append(simple_token_plugin)
 
 flash = auth.flash
 

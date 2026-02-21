@@ -97,7 +97,4 @@ def new_topic(channel_tag):
 
 # View Topic and responses to the topic, optionally allow adding a reply
 # Eg. /c/WoodWorkingMistakes/25
-@action('c/<channel_tag>/<topic_id:int>', method=['get', 'post'])
-@action.uses('topic/new.html', auth, session, T)
-def new_topic(channel_tag, topic_id):
-    return {}
+# TODO

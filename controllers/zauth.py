@@ -28,6 +28,7 @@ else your app will result in undefined behavior
 
 import random
 from py4web import action, request, redirect, URL
+from py4web.utils.grid import Grid
 from ..common import db, session, T, auth
 from ..forumhelper import forumhelper as fh
 from pydal.validators import CRYPT
@@ -289,3 +290,12 @@ def system_admin():
     payload['system_settings'] = system_settings
 
     return payload
+
+# Generate own tokens, users can generate their own auth tokens, 
+# they must be authenticated to use this feature.
+@action('zauth/token')
+@action.uses('generic.html', auth.user, db)
+def _():
+   db.auth_simple_token.user_id.default = auth.user_id
+   grid = Grid(db.auth_simple_token.user_id==auth.user_id, create=True, deletable=True)
+   return dict(grid=grid)
